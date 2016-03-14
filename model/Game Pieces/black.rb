@@ -1,4 +1,4 @@
-require "../game_piece"
+require_relative "../game_piece"
 
 class BlackPiece < GamePiece
 
