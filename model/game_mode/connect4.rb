@@ -16,31 +16,31 @@ class Connect4 < GameMode
 
         black_patterns = []
         pattern = Hash.new
-        pattern[0, 0] = BlackPiece.new
-        pattern[0, 1] = BlackPiece.new
-        pattern[0, 2] = BlackPiece.new
-        pattern[0, 3] = BlackPiece.new
+        pattern[[0, 0]] = BlackPiece.new
+        pattern[[0, 1]] = BlackPiece.new
+        pattern[[0, 2]] = BlackPiece.new
+        pattern[[0, 3]] = BlackPiece.new
         black_patterns << pattern
 
         pattern = Hash.new
-        pattern[0, 0] = BlackPiece.new
-        pattern[1, 0] = BlackPiece.new
-        pattern[2, 0] = BlackPiece.new
-        pattern[3, 0] = BlackPiece.new
+        pattern[[0, 0]] = BlackPiece.new
+        pattern[[1, 0]] = BlackPiece.new
+        pattern[[2, 0]] = BlackPiece.new
+        pattern[[3, 0]] = BlackPiece.new
         black_patterns << pattern
 
         pattern = Hash.new
-        pattern[0, 0] = BlackPiece.new
-        pattern[1, 1] = BlackPiece.new
-        pattern[2, 2] = BlackPiece.new
-        pattern[3, 3] = BlackPiece.new
+        pattern[[0, 0]] = BlackPiece.new
+        pattern[[1, 1]] = BlackPiece.new
+        pattern[[2, 2]] = BlackPiece.new
+        pattern[[3, 3]] = BlackPiece.new
         black_patterns << pattern
 
         pattern = Hash.new
-        pattern[3, 0] = BlackPiece.new
-        pattern[2, 1] = BlackPiece.new
-        pattern[1, 2] = BlackPiece.new
-        pattern[0, 3] = BlackPiece.new
+        pattern[[3, 0]] = BlackPiece.new
+        pattern[[2, 1]] = BlackPiece.new
+        pattern[[1, 2]] = BlackPiece.new
+        pattern[[0, 3]] = BlackPiece.new
         black_patterns << pattern
 
         @player_patterns << black_patterns
@@ -48,31 +48,31 @@ class Connect4 < GameMode
 
         red_patterns = []
         pattern = Hash.new
-        pattern[0, 0] = RedPiece.new
-        pattern[0, 1] = RedPiece.new
-        pattern[0, 2] = RedPiece.new
-        pattern[0, 3] = RedPiece.new
+        pattern[[0, 0]] = RedPiece.new
+        pattern[[0, 1]] = RedPiece.new
+        pattern[[0, 2]] = RedPiece.new
+        pattern[[0, 3]] = RedPiece.new
         red_patterns << pattern
 
         pattern = Hash.new
-        pattern[0, 0] = RedPiece.new
-        pattern[1, 0] = RedPiece.new
-        pattern[2, 0] = RedPiece.new
-        pattern[3, 0] = RedPiece.new
+        pattern[[0, 0]] = RedPiece.new
+        pattern[[1, 0]] = RedPiece.new
+        pattern[[2, 0]] = RedPiece.new
+        pattern[[3, 0]] = RedPiece.new
         red_patterns << pattern
 
         pattern = Hash.new
-        pattern[0, 0] = RedPiece.new
-        pattern[1, 1] = RedPiece.new
-        pattern[2, 2] = RedPiece.new
-        pattern[3, 3] = RedPiece.new
+        pattern[[0, 0]] = RedPiece.new
+        pattern[[1, 1]] = RedPiece.new
+        pattern[[2, 2]] = RedPiece.new
+        pattern[[3, 3]] = RedPiece.new
         red_patterns << pattern
 
         pattern = Hash.new
-        pattern[3, 0] = RedPiece.new
-        pattern[2, 1] = RedPiece.new
-        pattern[1, 2] = RedPiece.new
-        pattern[0, 3] = RedPiece.new
+        pattern[[3, 0]] = RedPiece.new
+        pattern[[2, 1]] = RedPiece.new
+        pattern[[1, 2]] = RedPiece.new
+        pattern[[0, 3]] = RedPiece.new
         red_patterns << pattern
         
         player_patterns << red_patterns
