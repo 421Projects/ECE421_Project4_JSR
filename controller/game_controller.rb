@@ -1,7 +1,7 @@
 require_relative "../model/board"
-require_relative "../model/ai_player"
-require_relative "../model/real_player"
-require_relative "../model/game_piece"
+require_relative "../model/player/ai_player"
+require_relative "../model/player/real_player"
+require_relative "../model/game_pieces/game_piece"
 require_relative "../model/game_pattern"
 
 class GameController
