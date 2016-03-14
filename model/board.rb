@@ -8,8 +8,13 @@ class Board
     include Contracts::Builtin
     include Contracts::Invariants
 
+    invariant(@width) {@width == @original_width}
+    invariant(@height) {@height == @original_height}
+
     Contract Contracts::Nat,Contracts::Nat => Any
 	def initialize(width, height)
+        @original_width = width
+        @original_height = height
 		@width = width
 		@height = height
 		@board = Hash.new
@@ -21,9 +26,10 @@ class Board
         return false
 	end
 
-    Contract Contracts::Nat,Contracts::Nat, GamePiece => None
+    Contract Contracts::Nat,Contracts::Nat, GamePiece => nil
 	def set_piece(x, y, piece)
 		@board[[x,y]] = piece
+        return nil
 	end
 
     Contract Contracts::Nat,Contracts::Nat => GamePiece
