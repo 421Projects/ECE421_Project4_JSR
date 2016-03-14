@@ -7,7 +7,15 @@ require_relative "../model/game_pattern"
 class GameController
 
     def initialize()
+        Dir["../model/game_mode/*"].each {|file| require file }
+
         @players = []
+    end
+
+    def create_game(game_mode)
+        gameClazz = Object.const_get(game_mode) # GameMode
+        game = gameClazz.new()
+
     end
 
     def place_piece(piece, position)
