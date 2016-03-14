@@ -1,4 +1,4 @@
-require "./game_piece"
+require_relative "./game_pieces/game_piece"
 
 class GamePattern
     

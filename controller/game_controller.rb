@@ -1,15 +1,30 @@
-require "../model/board"
-require "../model/ai_player"
-require "../model/real_player"
-require "../model/game_piece"
-require "../model/game_pattern"
+require_relative "../model/board"
+require_relative "../model/ai_player"
+require_relative "../model/real_player"
+require_relative "../model/game_piece"
+require_relative "../model/game_pattern"
 
 class GameController
 
-    def initialize(board, *players)
+    def initialize()
+        @players = []
     end
 
     def place_piece(piece, position)
+    end
+
+    def create_real_players(num_players)
+        for i in 0..num_players - 1
+            @players.push(new RealPlayer())
+        end
+    end
+
+    def create_ai_players(num_players)
+
+    end
+
+    def get_number_of_players()
+        return @players.length
     end
 
     def modify_player

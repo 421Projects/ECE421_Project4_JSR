@@ -1,5 +1,5 @@
-require "./game_pattern"
-require "./game_piece"
+require_relative "../game_pattern"
+require_relative "../game_pieces/game_piece"
 
 class Player
 

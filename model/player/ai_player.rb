@@ -1,4 +1,4 @@
-require "./player"
+require_relative "./player"
 
 class AIPlayer < Player
     def play()
