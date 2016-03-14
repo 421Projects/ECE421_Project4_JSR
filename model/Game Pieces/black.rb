@@ -1,8 +1,8 @@
+require "../game_piece"
 
+class BlackPiece < GamePiece
 
-class BlackPiece
-
-	def initialize()
-		@image_location = "../res/black_piece.png"
-	end
+    def initialize()
+        @image_location = "../res/black_piece.png"
+    end
 end

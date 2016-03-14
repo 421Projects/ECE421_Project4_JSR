@@ -2,13 +2,13 @@
 
 class GamePiece
 
-	def initialize()
+    def initialize()
         @image_location = nil
         @image = nil # This will probably be a GTK::Image
     end
 
     def get_image()
-    	return @image
+        return @image
     end
 
     # Load the @image_location into image.
