@@ -9,7 +9,7 @@ class GamePattern
 
     invariant(@pattern) {@pattern == @original_pattern_array}
 
-    Contract ArrayOf[ArrayOf[GamePiece]] => Any
+    Contract ArrayOf[HashOf[ArrayOf[Contracts::Nat] => GamePiece]] => Any
     def initialize(pattern_array)
         @original_pattern_array = pattern_array
         @pattern = pattern_array
