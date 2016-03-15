@@ -13,6 +13,8 @@ class Connect4 < GameMode
         @og_num_players = @num_players
         @player_pieces = []
         @player_patterns = []
+        @width = 7
+        @height = 6
 
         @player_pieces.push(BlackPiece.new)
         @player_pieces.push(RedPiece.new)

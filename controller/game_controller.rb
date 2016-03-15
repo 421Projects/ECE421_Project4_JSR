@@ -19,15 +19,15 @@ class GameController
         @players = []
     end
 
-    Contract GameMode => nil
+    Contract String => GameMode
     def create_game(game_mode)
         gameClazz = Object.const_get(game_mode) # GameMode
-        game = gameClazz.new()
-        return nil
+        @game = gameClazz.new()
+        return @game
     end
 
-    Contract GamePiece, Array => nil
-    def place_piece(piece, position)
+    Contract GamePiece, Contracts::Nat => nil
+    def place_piece(piece, column)
         return nil
     end
 
@@ -49,19 +49,14 @@ class GameController
         return @players.length
     end
 
-    Contract Player => nil
-    def modify_player(player)
+    Contract Contracts::Nat => Player
+    def get_player(playerId)
         return nil
     end
 
-    Contract GamePiece => nil
-    def modify_game_piece(game_piece)
-        return nil
-    end
-
-    Contract GamePattern => nil
-    def modify_game_pattern(game_pattern)
-        return nil
+    Contract Contracts::Nat => Board
+    def get_board()
+        return @board
     end
 
 end
