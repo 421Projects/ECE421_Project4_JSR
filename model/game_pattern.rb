@@ -7,9 +7,11 @@ class GamePattern
     include Contracts::Builtin
     include Contracts::Invariants
 
+    attr_accessor :pattern
+
     invariant(@pattern) {@pattern == @original_pattern_array}
 
-    Contract ArrayOf[HashOf[ArrayOf[Contracts::Nat] => GamePiece]] => Any
+    Contract HashOf[ArrayOf[Contracts::Nat] => GamePiece] => Any
     def initialize(pattern_array)
         @original_pattern_array = pattern_array
         @pattern = pattern_array
