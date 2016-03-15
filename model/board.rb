@@ -26,9 +26,8 @@ class Board
         return false
 	end
 
-    Contract Contracts::Nat,Contracts::Nat, GamePiece => nil
-	def set_piece(x, y, piece)
-		@board[[x,y]] = piece
+    Contract Contracts::Nat, GamePiece => nil
+	def set_piece(column, piece)
         return nil
 	end
 
