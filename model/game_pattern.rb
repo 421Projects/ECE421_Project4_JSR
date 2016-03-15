@@ -9,14 +9,15 @@ class GamePattern
 
     attr_accessor :pattern
 
-
     Contract HashOf[ArrayOf[Contracts::Nat] => GamePiece] => Any
     def initialize
         @original_pattern = {}
         @pattern = {}
     end
 
+    Contract [Contracts::Nat, Contracts::Nat], GamePiece => nil
     def []=(location, piece)
         @pattern[location] = piece
+        return nil
     end
 end
