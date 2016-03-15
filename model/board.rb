@@ -37,7 +37,7 @@ class Board
 		return @board[[x, y]]
 	end
 
-    Contract None => Pos
+    Contract None => Contracts::Nat
     def get_piece_count()
         return 0
     end
