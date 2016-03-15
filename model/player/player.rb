@@ -9,14 +9,14 @@ class Player
     include Contracts::Invariants
 
     invariant(@pattern) {@pattern == @original_pattern}
-    invariant(@piece) {@piec == @original_piece}
+    invariant(@piece) {@piece == @original_piece}
 
     Contract GamePattern, GamePiece => Any
     def initialize(pattern, piece)
         @original_pattern = pattern
         @original_piece = piece
-        @pattern = pattern
-        @piece = piece
+        @pattern = @original_pattern
+        @piece = @original_piece
     end
 
     Contract None => nil
