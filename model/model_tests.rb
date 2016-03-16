@@ -7,6 +7,7 @@ require "./game_pieces/black"
 require "./game_pieces/red"
 require "./game_pieces/o"
 require "./game_pieces/t"
+require_relative "game_mode/game_mode"
 
 
 class Connect4ModelTest < Test::Unit::TestCase
@@ -169,6 +170,18 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         assert_equal(b.analyze, false,
                      "Wrongly calculated the game to be won.")
+    end
+
+    def test_game_mode_constructor
+        assert_raise NotImplementedError do 
+            thrown = GameMode.new
+        end
+    end
+
+    def test_game_piece_constructor
+        assert_raise NotImplementedError do 
+            thrown = GamePiece.new
+        end
     end
 
 end

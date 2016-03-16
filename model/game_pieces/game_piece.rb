@@ -8,8 +8,7 @@ class GamePiece
 
     Contract None => Any
     def initialize()
-        @image_location = nil
-        @image = nil # This will probably be a GTK::Image
+        raise NotImplementedError, "Objects that extend GamePiece must provide their own constructor."
     end
 
     Contract None => Any
