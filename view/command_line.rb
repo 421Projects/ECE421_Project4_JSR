@@ -1,13 +1,20 @@
 require "../controller/game_controller"
+require 'contracts'
 
 class CommandLineView
 
+    include Contracts::Core
+    include Contracts::Builtin
+    include Contracts::Invariants
+
     @@commands = ["new", "print", "place", "quit"]
 
+    Contract None => Contracts::None
     def initialize()
 
     end
 
+    Contract None => Contracts::None
     def start_game()
         running = true
 
@@ -31,7 +38,8 @@ class CommandLineView
     def place_piece(piece, position)
     end
 
-    def new_game()
+    Contract String => GameMode
+    def new_game(game_mode)
         # Get the game mode
         
         # Get the number of real players
@@ -42,6 +50,7 @@ class CommandLineView
         @game_controller = new GameController()
     end
 
+    Contract None => Contracts::None
     def exit_game()
     end
 
