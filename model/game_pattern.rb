@@ -20,4 +20,10 @@ class GamePattern
         @pattern[location] = piece
         return nil
     end
+
+    Contract [Contracts::Nat, Contracts::Nat] => GamePiece
+    def [](location)
+        return @pattern[location]
+    end
+
 end
