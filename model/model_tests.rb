@@ -1,5 +1,6 @@
 require "test/unit"
 require "./player/player"
+require "./player/ai_player"
 require "./game_pieces/game_piece"
 require "./game_pattern"
 require "./board"
@@ -560,6 +561,81 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         assert_equal(b.analyze, false,
                      "Wrongly calculated the game to be won.")
+    end
+
+    def test_ai_basic_play
+        red_patterns = []
+        pattern = GamePattern.new
+        pattern[[0, 0]] = RedPiece.new
+        pattern[[0, 1]] = RedPiece.new
+        pattern[[0, 2]] = RedPiece.new
+        pattern[[0, 3]] = RedPiece.new
+        red_patterns << pattern
+
+        black_patterns = []
+        pattern = GamePattern.new
+        pattern[[0, 0]] = BlackPiece.new
+        pattern[[0, 1]] = BlackPiece.new
+        pattern[[0, 2]] = BlackPiece.new
+        pattern[[0, 3]] = BlackPiece.new
+        black_patterns << pattern
+
+        p1 = AIPlayer.new(black_patterns, BlackPiece.new)
+        p2 = AIPlayer.new(red_patterns, RedPiece.new)
+
+        b = Board.new(1,1)
+        assert_equal(b.get_piece_count, 0)
+        p1.play(b)
+        assert_equal(b.get_piece_count, 1)
+        assert(b.get_piece(1,1).is_a? BlackPiece)
+
+        b = Board.new(1,1)
+        assert_equal(b.get_piece_count, 0)
+        p2.play(b)
+        assert_equal(b.get_piece_count, 1)
+        assert(b.get_piece(1,1).is_a? RedPiece)
+
+
+        b = Board.new(6,7)
+        assert_equal(b.get_piece_count, 0)
+
+        p1.play(b)
+        assert_equal(b.get_piece_count, 1)
+
+        p1.play(b)
+        assert_equal(b.get_piece_count, 2)
+
+        p1.play(b)
+        assert_equal(b.get_piece_count, 3)
+
+        p1.play(b)
+        assert_equal(b.get_piece_count, 4)
+
+        assert_equal(b.analyze(p1.pattern_array), true,
+                     "Didn't detect win.")
+        assert_equal(b.analyze(p2.pattern_array), false,
+                     "Wrongly calculated the game to be won.")
+
+        b = Board.new(6,7)
+        assert_equal(b.get_piece_count, 0)
+
+        p2.play(b)
+        assert_equal(b.get_piece_count, 1)
+
+        p2.play(b)
+        assert_equal(b.get_piece_count, 2)
+
+        p2.play(b)
+        assert_equal(b.get_piece_count, 3)
+
+        p2.play(b)
+        assert_equal(b.get_piece_count, 4)
+
+        assert_equal(b.analyze(p2.pattern_array), true,
+                     "Didn't detect win.")
+        assert_equal(b.analyze(p1.pattern_array), false,
+                     "Wrongly calculated the game to be won.")
+
     end
 
     def test_game_mode_constructor
