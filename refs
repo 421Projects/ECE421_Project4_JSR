@@ -6,3 +6,9 @@ http://zetcode.com/gui/rubygtk/
 http://ruby-gnome.sourceforge.net/tutorial/
 http://ruby-gnome.sourceforge.net/programming/hello.html
 http://www.rubydoc.info/gems/gtk3/3.0.7
+
+attr_accessor
+http://stackoverflow.com/questions/5046831/why-use-rubys-attr-accessor-attr-reader-and-attr-writer
+
+contracts
+http://egonschiele.github.io/contracts.ruby/
