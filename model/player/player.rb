@@ -8,14 +8,16 @@ class Player
     include Contracts::Builtin
     include Contracts::Invariants
 
-    invariant(@pattern_array) {@pattern == @original_pattern_array}
+    attr_reader :pattern_array, :piece
+
+    invariant(@pattern_array) {@pattern_array == @original_pattern_array}
     invariant(@piece) {@piece == @original_piece}
 
     Contract ArrayOf[GamePattern], GamePiece => Any
     def initialize(pattern_array, piece)
         @original_pattern_array = pattern_array
         @original_piece = piece
-        @pattern = @original_pattern_array
+        @pattern_array = @original_pattern_array
         @piece = @original_piece
     end
 
