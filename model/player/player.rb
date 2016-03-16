@@ -1,5 +1,6 @@
 require_relative "../game_pattern"
 require_relative "../game_pieces/game_piece"
+require_relative "../board"
 require 'contracts'
 
 class Player
@@ -21,8 +22,8 @@ class Player
         @piece = @original_piece
     end
 
-    Contract None => nil
-    def play()
+    Contract Board => nil
+    def play(board_to_play)
         raise NotImplementedError, "Objects that extend Player must implement play."
     end
 end
