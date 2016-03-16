@@ -33,7 +33,7 @@ class Board
 
     Contract Contracts::Nat,Contracts::Nat => GamePiece
 	def get_piece(x, y)
-		return GamePiece.new
+		return BlackPiece.new # arbitrary choice, couldn't choose GamePiece
 	end
 
     Contract None => Contracts::Nat
