@@ -11,14 +11,11 @@ class Player
 
     attr_reader :pattern_array, :piece
 
-    invariant(@pattern_array) {@pattern_array == @original_pattern_array}
     invariant(@piece) {@piece == @original_piece}
 
     Contract ArrayOf[GamePattern], GamePiece => Any
-    def initialize(pattern_array, piece)
-        @original_pattern_array = pattern_array
+    def initialize(piece)
         @original_piece = piece
-        @pattern_array = @original_pattern_array
         @piece = @original_piece
     end
 

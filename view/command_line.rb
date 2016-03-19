@@ -1,4 +1,4 @@
-require "../controller/game_controller"
+require "../controller/commandline_controller"
 require 'contracts'
 
 class CommandLineView
@@ -16,6 +16,7 @@ class CommandLineView
 
     Contract None => nil
     def start_game()
+        eval("g = CMDController.new")
         running = true
 
         while (running)
@@ -27,12 +28,11 @@ class CommandLineView
     end
 
     def get_command()
-        user_input = gets.chomp.split
-        parse_command(user_input)
+        return gets.chomp.split
     end
 
     def parse_command(user_input)
-
+        eval("g.#{user_input}")
     end
 
     def place_piece(piece, position)
@@ -41,7 +41,7 @@ class CommandLineView
     Contract String => GameMode
     def new_game(game)
         # Get the game mode
-        
+
         # Get the number of real players
 
         # Get the number of AI Players

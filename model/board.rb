@@ -1,8 +1,11 @@
-require_relative "./game_pieces/game_piece"
-require_relative "./game_pattern"
 require 'contracts'
-
+require './player/player'
 class Board
+
+    class ColumnFullError < Exception
+    end
+    class OutOfBounds < Exception
+    end
 
     include Contracts::Core
     include Contracts::Builtin
@@ -18,22 +21,36 @@ class Board
 		@width = width
 		@height = height
 		@board = Hash.new
+        @piece_count = 0
 	end
 
-    Contract ArrayOf[GamePattern] => Bool
+    Contract ArrayOf[HashOf[String]] => Bool
 	def analyze(pattern_array)
 		#Looks for all the given patterns in the board
         return false
 	end
 
-    Contract Contracts::Nat, GamePiece => nil
-	def set_piece(column, piece)
+    Contract Contracts::Nat, Player  => nil
+	def set_piece(column, player)
+        raise OutOfBounds unless column <= @width
+
+        row = 1
+        while @board[row,column] != nil
+            row += 1
+        end
+        if row >= @height
+            return ColumnFullError
+        else
+            @board[row,column] = player
+            @piece_count += 1
+        end
+
         return nil
 	end
 
-    Contract Contracts::Nat,Contracts::Nat => GamePiece
-	def get_piece(x, y)
-		return BlackPiece.new # arbitrary choice, couldn't choose GamePiece
+    Contract Contracts::Nat,Contracts::Nat => String
+	def get_player_on_pos(row, col)
+		return @board[row, col]
 	end
 
     Contract None => Contracts::Nat
