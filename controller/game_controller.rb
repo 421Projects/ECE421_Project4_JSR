@@ -1,8 +1,6 @@
 require_relative "../model/board"
 require_relative "../model/player/ai_player"
 require_relative "../model/player/real_player"
-require_relative "../model/game_pieces/game_piece"
-require_relative "../model/game_pattern"
 require_relative "../model/game/game"
 require 'contracts'
 
@@ -26,7 +24,7 @@ class GameController
         return @game
     end
 
-    Contract GamePiece, Contracts::Nat => nil
+    Contract String, Contracts::Nat => nil
     def place_piece(piece, column)
         return nil
     end
