@@ -1,10 +1,8 @@
 require_relative "./game"
-require_relative "../game_pieces/black"
-require_relative "../game_pieces/red"
 
 class Connect4 < GameMode
 
-    attr_accessor: p1, p2
+    attr_accessor :p1, :p2
 
     invariant(@num_players) {@num_players == @og_num_players}
 
@@ -13,14 +11,14 @@ class Connect4 < GameMode
         @p2_piece = "R"
         case p1
         when nil
-            @p1 = real_player.new
+            @p1 = real_player.new(@p1_piece)
         when Player
             @p1 = p1
         end
 
         case p2
         when nil
-            @p2 = real_player.new
+            @p2 = real_player.new(@p2_piece)
         when Player
             @p2 = p2
         end
@@ -35,10 +33,10 @@ class Connect4 < GameMode
         @board_height = 6
 
 
-        @pieces = {
-            @p1 => p1_piece,
-            @p2 => p2_piece
-        }
+        # This will hold the images related to each piece:
+        # String => Image
+        @pieces = {}
+
 
         # @patterns = {
         #     p1 => [
@@ -50,7 +48,7 @@ class Connect4 < GameMode
 
 
         # Create patterns for Black Pieces
-
+        # Stored as [row, column]
         black_patterns = []
         pattern = {}
         pattern[[0, 0]] = @p1

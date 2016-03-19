@@ -1,7 +1,5 @@
-require_relative "../game_pattern"
-require_relative "../game_pieces/game_piece"
+require "contracts"
 require_relative "../board"
-require 'contracts'
 
 class Player
 
@@ -13,7 +11,7 @@ class Player
 
     invariant(@piece) {@piece == @original_piece}
 
-    Contract ArrayOf[GamePattern], GamePiece => Any
+    Contract String => Any
     def initialize(piece)
         @original_piece = piece
         @piece = @original_piece
