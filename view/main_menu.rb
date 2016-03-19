@@ -5,7 +5,7 @@ def MainMenuView
     def initialize()
     end
 
-    def choose_mode(game_mode)
+    def choose_mode(game)
     end
 
     def new_game()

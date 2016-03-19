@@ -1,27 +1,27 @@
 require "test/unit"
 require_relative "game_controller"
 require_relative "../model/board"
-require_relative "../model/game_mode/connect4"
-require_relative "../model/game_mode/otto_toot"
+require_relative "../model/game/connect4"
+require_relative "../model/game/otto_toot"
 require_relative "../model/game_pieces/black.rb"
 
 class ControllerTest < Test::Unit::TestCase
 
     def test_create_game
         game_controller = GameController.new
-        game_mode = game_controller.create_game("Connect4")
+        game = game_controller.create_game("Connect4")
 
-        assert(game_mode.is_a?(Connect4))
+        assert(game.is_a?(Connect4))
 
         game_controller = GameController.new
-        game_mode = game_controller.create_game("OttoToot")
+        game = game_controller.create_game("OttoToot")
 
-        assert(game_mode.is_a?(OttoToot))
+        assert(game.is_a?(OttoToot))
     end
 
     def test_place_piece
         game_controller = GameController.new
-        game_mode = game_controller.create_game("Connect4")
+        game = game_controller.create_game("Connect4")
 
         piece = Black.new
 
@@ -33,7 +33,7 @@ class ControllerTest < Test::Unit::TestCase
 
     def test_create_real_player
         game_controller = GameController.new
-        game_mode = game_controller.create_game("Connect4")
+        game = game_controller.create_game("Connect4")
 
         game_controller.create_real_players(1)
 
@@ -42,7 +42,7 @@ class ControllerTest < Test::Unit::TestCase
 
     def test_create_ai_player
         game_controller = GameController.new
-        game_mode = game_controller.create_game("Connect4")
+        game = game_controller.create_game("Connect4")
 
         game_controller.create_ai_players(1)
 

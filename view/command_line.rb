@@ -9,12 +9,12 @@ class CommandLineView
 
     @@commands = ["new", "print", "place", "quit"]
 
-    Contract None => Contracts::None
+    Contract None => nil
     def initialize()
 
     end
 
-    Contract None => Contracts::None
+    Contract None => nil
     def start_game()
         running = true
 
@@ -39,7 +39,7 @@ class CommandLineView
     end
 
     Contract String => GameMode
-    def new_game(game_mode)
+    def new_game(game)
         # Get the game mode
         
         # Get the number of real players
@@ -60,3 +60,5 @@ class CommandLineView
 
 end
 
+c = CommandLineView.new
+c.start_game()

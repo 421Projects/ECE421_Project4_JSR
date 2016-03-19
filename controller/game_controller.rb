@@ -3,7 +3,7 @@ require_relative "../model/player/ai_player"
 require_relative "../model/player/real_player"
 require_relative "../model/game_pieces/game_piece"
 require_relative "../model/game_pattern"
-require_relative "../model/game_mode/game_mode"
+require_relative "../model/game/game"
 require 'contracts'
 
 class GameController
@@ -14,14 +14,14 @@ class GameController
 
     Contract None => Any
     def initialize()
-        Dir["../model/game_mode/*"].each {|file| require file }
+        Dir["../model/game/*"].each {|file| require file }
 
         @players = []
     end
 
     Contract String => GameMode
-    def create_game(game_mode)
-        gameClazz = Object.const_get(game_mode) # GameMode
+    def create_game(game)
+        gameClazz = Object.const_get(game) # GameMode
         @game = gameClazz.new()
         return @game
     end

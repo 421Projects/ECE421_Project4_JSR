@@ -1,4 +1,4 @@
-require_relative "./game_mode"
+require_relative "./game"
 require_relative "../game_pieces/black"
 require_relative "../game_pieces/red"
 

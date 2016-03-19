@@ -8,7 +8,7 @@ require "./game_pieces/black"
 require "./game_pieces/red"
 require "./game_pieces/o"
 require "./game_pieces/t"
-require_relative "game_mode/game_mode"
+require_relative "game/game"
 
 
 class Connect4ModelTest < Test::Unit::TestCase
@@ -638,7 +638,7 @@ class Connect4ModelTest < Test::Unit::TestCase
 
     end
 
-    def test_game_mode_constructor
+    def test_game_constructor
         assert_raise NotImplementedError do
             thrown = GameMode.new
         end

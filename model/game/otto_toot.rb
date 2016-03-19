@@ -1,4 +1,4 @@
-require_relative "./game_mode"
+require_relative "./game"
 
 class OttoToot < GameMode
     invariant(@num_players) {@num_players == @og_num_players}
