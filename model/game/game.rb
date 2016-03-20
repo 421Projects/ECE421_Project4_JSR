@@ -1,5 +1,5 @@
 require "contracts"
-require '../board'
+require_relative '../board'
 
 class GameMode
 

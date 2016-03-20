@@ -1,5 +1,3 @@
-require_relative "../game_pattern"
-require_relative "../game_pieces/game_piece"
 require_relative "../board"
 require 'contracts'
 
@@ -9,17 +7,22 @@ class Player
     include Contracts::Builtin
     include Contracts::Invariants
 
-    attr_reader :pattern_array, :piece
+    attr_reader :pattern_array, :piece, :name
 
     invariant(@piece) {@piece == @original_piece}
 
-    Contract ArrayOf[GamePattern], GamePiece => Any
-    def initialize(piece)
+    Contract Any => Any
+    def initialize(piece, name=piece+":Player")
         @original_piece = piece
         @piece = @original_piece
+        @name = name
     end
 
-    Contract Board => nil
+    def to_s
+        return @name
+    end
+
+    Contract Any => nil
     def play(board_to_play)
         raise NotImplementedError, "Objects that extend Player must implement play."
     end

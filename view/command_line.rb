@@ -11,15 +11,21 @@ class CommandLineView
 
     Contract None => nil
     def initialize()
-
+        @game_started = false
+        return nil
     end
 
     Contract None => nil
     def start_game()
-        eval("g = CMDController.new")
+        eval("CMDController.initialize")
         running = true
 
         while (running)
+            if @game_started
+                puts "#{eval('CMDController.get_player_playing.to_s')}> "
+            else
+                puts "Prompt> "
+            end
             # Player
 
             #Iterate through the number of real players
@@ -32,30 +38,39 @@ class CommandLineView
     end
 
     def parse_command(user_input)
-        eval("g.#{user_input}")
+        # http://stackoverflow.com/questions/8258517/how-to-check-whether-a-string-contains-a-substring-in-ruby
+        if user_input[0].include? "print"
+            pretty_print(eval("CMDController.get_board"))
+        elsif user_input[0].downcase.include? "help"
+            puts " help: \n new: \n restart: \n"
+        else
+            if user_input[0].downcase.include? "new" or
+              user_input[0].downcase.include? "create"
+                @game_started = true
+            elsif user_input[0].downcase.include? "reset" or
+                 user_input[0].downcase.include? "restart"
+                @game_started = false
+            end
+            eval("CMDController.handle_event(#{user_input})")
+        end
     end
 
-    def place_piece(piece, position)
+    def pretty_print(board)
+        puts board.board
+        board_pic = ""
+        for r in board.height.downto(1)
+            for c in 1..board.width
+                # board_pic += "(#{r},#{c})[#{board.get_player_on_pos(r,c).piece}], "
+                board_pic += "[#{board.get_player_on_pos(r,c).piece}], "
+            end
+            board_pic += "\n"
+        end
+        puts board_pic
     end
 
-    Contract String => GameMode
-    def new_game(game)
-        # Get the game mode
-
-        # Get the number of real players
-
-        # Get the number of AI Players
-
-        # Initialize the controller
-        @game_controller = new GameController()
-    end
 
     Contract None => Contracts::None
     def exit_game()
-    end
-
-    def print_board()
-        # did we decide to implement this?
     end
 
 end
