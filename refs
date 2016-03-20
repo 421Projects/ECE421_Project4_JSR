@@ -12,3 +12,42 @@ http://stackoverflow.com/questions/5046831/why-use-rubys-attr-accessor-attr-read
 
 contracts
 http://egonschiele.github.io/contracts.ruby/
+
+Integer
+http://stackoverflow.com/questions/1235863/test-if-a-string-is-basically-an-integer-in-quotes-using-ruby
+
+downcase
+http://stackoverflow.com/questions/1020568/how-to-convert-a-string-to-lower-or-upper-case-in-ruby
+
+multiple 
+http://www.misuse.org/science/2008/01/30/passing-multiple-arguments-in-ruby-is-your-friend/
+
+downto
+http://stackoverflow.com/questions/8926477/how-to-write-negative-loop-in-ruby-like-fori-index-i-0-i
+
+if else
+http://www.tutorialspoint.com/ruby/ruby_if_else.htm
+
+debug
+http://stackoverflow.com/questions/3955688/how-do-i-debug-ruby-scripts
+
+default hash values 
+http://docs.ruby-lang.org/en/2.0.0/Hash.html
+
+include 
+http://stackoverflow.com/questions/8258517/how-to-check-whether-a-string-contains-a-substring-in-ruby
+
+static methods
+http://stackoverflow.com/questions/13767240/ruby-how-to-make-a-public-static-method
+
+join
+http://stackoverflow.com/questions/3500814/ruby-array-to-string-conversion
+
+attr
+http://stackoverflow.com/questions/5046831/why-use-rubys-attr-accessor-attr-reader-and-attr-writer
+
+case 
+http://www.skorks.com/2009/08/how-a-ruby-case-statement-works-and-what-you-can-do-with-it/
+
+custom exceptions
+http://www.skorks.com/2009/09/ruby-exceptions-and-exception-handling/
