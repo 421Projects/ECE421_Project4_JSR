@@ -55,7 +55,7 @@ class CMDController
             return arg
         end
         if @player_playing.is_a? AIPlayer
-            @board.set_piece(player.play(@board)-1, @player_playing.piece)
+            @board.set_piece(@player_playing.play(@board)-1, @player_playing.piece)
         else
             @board.set_piece(arg-1, @player_playing.piece)
         end
