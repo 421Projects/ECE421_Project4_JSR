@@ -37,6 +37,10 @@ class Connect4 < GameMode
             @p1 => @p1_piece,
             @p2 => @p2_piece
         }
+        # This will hold the images related to each piece:
+        # String => Image
+        # @pieces = {}
+
 
         # @patterns = {
         #     p1 => [
@@ -48,7 +52,7 @@ class Connect4 < GameMode
 
 
         # Create patterns for Black Pieces
-
+        # Stored as [row, column]
         black_patterns = []
         pattern = {}
         pattern[[0, 0]] = @p1

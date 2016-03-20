@@ -1,5 +1,8 @@
+<<<<<<< HEAD
+=======
+require "contracts"
+>>>>>>> 7ba36778f256d3f995cd9c1ed0b2799601926d27
 require_relative "../board"
-require 'contracts'
 
 class Player
 

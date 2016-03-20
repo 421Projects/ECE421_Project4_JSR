@@ -34,5 +34,6 @@ class GameMode
             return pieces[player]
         end
     end
+
 end
 
