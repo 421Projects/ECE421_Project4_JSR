@@ -1,4 +1,4 @@
-require "../controller/game_controller"
+require_relative "../controller/game_controller"
 
 def MainMenuView
 

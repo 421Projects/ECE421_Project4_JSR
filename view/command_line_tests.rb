@@ -1,5 +1,5 @@
 require "test/unit"
-require "../controller/game_controller"
+require_relative "../controller/game_controller"
 require_relative "command_line"
 
 class CommandLineViewTest < Test::Unit::TestCase

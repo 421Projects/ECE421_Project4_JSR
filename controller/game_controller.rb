@@ -12,7 +12,7 @@ class GameController
 
     Contract None => Any
     def initialize()
-        Dir["../model/game/*"].each {|file| require file }
+        Dir["../model/game/*"].each {|file| require_relative file }
 
         @players = []
     end
