@@ -2,6 +2,7 @@ require_relative "../model/board"
 require_relative "../model/player/ai_player"
 require_relative "../model/player/real_player"
 require_relative "../model/game/game"
+require_relative "../model/game/connect4"
 require 'contracts'
 
 class CMDController
@@ -12,11 +13,12 @@ class CMDController
 
     #Contract None => Any
     def self.initialize()
-        Dir["../model/game/*"].each {|file| require file }
+        Dir["../model/game/*"].each {|file| require_relative file }
 
         @players = []
         @board = nil
         @player_playing = nil
+        @AI_players = 0
     end
 
     def self.get_player_playing
@@ -24,15 +26,26 @@ class CMDController
     end
 
     #Contract String => GameMode
-    def self.create_game(game, p1 = nil, p2 = nil)
+    def self.create_game(game)
         gameClazz = Object.const_get(game) # GameMode
         if gameClazz.superclass == GameMode
-            @game = gameClazz.new(p1, p2)
+            @game = gameClazz.new()
+            patterns = [@game.p2_patterns, @game.p1_patterns]
+            names = ["A", "R"]
+            for i in 1..@AI_players
+                puts "creating ai"
+                @players.push(AIPlayer.new(names.pop, patterns.pop))
+            end
+
+            while @players.size < 2 # number of players
+                puts "creating real"
+                @players.push(RealPlayer.new(names.pop, patterns.pop))
+            end
             @board = Board.new(@game.board_width, @game.board_height)
-            puts @board
-            @players.push(@game.p1)
-            @players.push(@game.p2)
             @player_playing = @players.shuffle[0]
+            if @player_playing.is_a? AIPlayer
+                self.take_turn(0)
+            end
         else
             raise StandardError, "#{gameClazz} not a Game."
         end
@@ -45,14 +58,17 @@ class CMDController
             return arg
         end
         if @player_playing.is_a? AIPlayer
-            @board.set_piece(player.play(@board), @player_playing)
+            @board.set_piece(@player_playing.play(@board)-1, @player_playing.piece)
         else
-            @board.set_piece(arg, @player_playing)
+            @board.set_piece(arg-1, @player_playing.piece)
         end
         # switch turns
         @player_playing = @players[@players.index(@player_playing)+1]
         if @player_playing == nil
             @player_playing = @players[0]
+        end
+        if @player_playing.is_a? AIPlayer
+            self.take_turn(0)
         end
         return nil
     end
@@ -61,7 +77,12 @@ class CMDController
         return @board
     end
 
+    def self.set_AIs(count)
+        @AI_players = count
+    end
+
     def self.handle_event(commands)
+        i = Integer(commands[0]) rescue nil
         if commands[0].downcase.include? "new" or
           commands[0].downcase.include? "create"
             if commands[1].downcase.include? "connect"
@@ -69,15 +90,17 @@ class CMDController
             elsif commands[1].downcase.include? "otto"
                 self.create_game("OttoToot")
             end
+        elsif commands[0].downcase.include? "ai"
+            self.set_AIs(Integer(commands[1]))
         elsif commands[0].downcase.include? "restart" or
           commands[0].downcase.include? "reset"
             @players = []
             @board = nil
             @player_playing = nil
-        else
-            i = Integer(commands[0]) rescue nil
-            puts i
+        elsif i != nil
             self.take_turn(i)
+        else
+            puts "#{commands} not recognized."
         end
 
     end

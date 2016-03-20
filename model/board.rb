@@ -14,7 +14,7 @@ class Board
     invariant(@width) {@width == @original_width}
     invariant(@height) {@height == @original_height}
 
-    attr_reader :piece_count
+    attr_reader :piece_count, :board, :height, :width
 
     #Contract Contracts::Nat,Contracts::Nat => Any
 	def initialize(width, height)
@@ -80,7 +80,7 @@ class Board
 	def set_piece(column, piece)
         raise OutOfBounds unless column <= @width
 
-        row = 1
+        row = 0
         while @board[[row,column]] != "*"
             row += 1
         end

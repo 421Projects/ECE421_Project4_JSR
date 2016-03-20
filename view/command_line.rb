@@ -1,4 +1,4 @@
-require "../controller/commandline_controller"
+require_relative "../controller/commandline_controller"
 require 'contracts'
 
 class CommandLineView
@@ -22,7 +22,7 @@ class CommandLineView
 
         while (running)
             if @game_started
-                puts "#{eval('CMDController.get_player_playing.to_s')}> "
+                puts "#{eval('CMDController.get_player_playing.to_s')} Next Piece?> "
             else
                 puts "Prompt> "
             end
@@ -39,13 +39,14 @@ class CommandLineView
 
     def parse_command(user_input)
         # http://stackoverflow.com/questions/8258517/how-to-check-whether-a-string-contains-a-substring-in-ruby
-        if user_input[0].include? "print"
-            pretty_print(eval("CMDController.get_board"))
-        elsif user_input[0].downcase.include? "help"
+        if user_input[0].downcase.include? "help"
             puts " help: \n new: \n restart: \n"
         else
             if user_input[0].downcase.include? "new" or
               user_input[0].downcase.include? "create"
+                puts "how many AIs?"
+                count = gets.chomp
+                eval("CMDController.handle_event(['ai',#{count}])")
                 @game_started = true
             elsif user_input[0].downcase.include? "reset" or
                  user_input[0].downcase.include? "restart"
@@ -53,15 +54,18 @@ class CommandLineView
             end
             eval("CMDController.handle_event(#{user_input})")
         end
+        if @game_started
+            self.pretty_print(eval("CMDController.get_board"))
+        end
     end
 
     def pretty_print(board)
         puts board.board
         board_pic = ""
-        for r in board.height.downto(1)
-            for c in 1..board.width
+        for r in board.height.downto(0)
+            for c in 0..board.width
                 # board_pic += "(#{r},#{c})[#{board.get_player_on_pos(r,c).piece}], "
-                board_pic += "[#{board.get_player_on_pos(r,c).piece}], "
+                board_pic += "[#{board.board[[r,c]]}], "
             end
             board_pic += "\n"
         end
