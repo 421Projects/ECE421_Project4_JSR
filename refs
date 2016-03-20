@@ -51,3 +51,9 @@ http://www.skorks.com/2009/08/how-a-ruby-case-statement-works-and-what-you-can-d
 
 custom exceptions
 http://www.skorks.com/2009/09/ruby-exceptions-and-exception-handling/
+
+observable
+http://ruby-doc.org/stdlib-1.9.3/libdoc/observer/rdoc/Observable.html
+http://stackoverflow.com/questions/11402244/observer-observable-objects-with-mvc-pattern
+
+
