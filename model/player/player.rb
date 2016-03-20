@@ -7,14 +7,12 @@ class Player
     include Contracts::Builtin
     include Contracts::Invariants
 
-    attr_reader :pattern_array, :piece
-
-    invariant(@piece) {@piece == @original_piece}
+    attr_reader :pattern_array
+    attr_accessor :piece
 
     Contract String => Any
     def initialize(piece)
-        @original_piece = piece
-        @piece = @original_piece
+        @piece = piece
     end
 
     Contract Board => nil

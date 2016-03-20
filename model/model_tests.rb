@@ -1,88 +1,13 @@
 require "test/unit"
-require "./player/player"
-require "./player/ai_player"
-require "./game_pieces/game_piece"
-require "./game_pattern"
-require "./board"
-require "./game_pieces/black"
-require "./game_pieces/red"
-require "./game_pieces/o"
-require "./game_pieces/t"
+require_relative "player/player"
+require_relative "player/ai_player"
+require_relative "board"
 require_relative "game/game"
 
 
 class Connect4ModelTest < Test::Unit::TestCase
 
-    def test_create_piece
-        b = BlackPiece.new()
-        r = RedPiece.new()
-
-        assert(b.is_a? GamePiece)
-        assert(r.is_a? GamePiece)
-
-        assert(b.respond_to? "play")
-        assert(r.respond_to? "play")
-        assert(g.respond_to? "play")
-    end
-
-    def test_create_pattern_player_board_connect4Mode
-        black_patterns = []
-        pattern = GamePattern.new
-        pattern[[0, 0]] = BlackPiece.new
-        pattern[[0, 1]] = BlackPiece.new
-        pattern[[0, 2]] = BlackPiece.new
-        pattern[[0, 3]] = BlackPiece.new
-        black_patterns << pattern
-
-        pattern = GamePattern.new
-        pattern[[0, 0]] = BlackPiece.new
-        pattern[[1, 0]] = BlackPiece.new
-        pattern[[2, 0]] = BlackPiece.new
-        pattern[[3, 0]] = BlackPiece.new
-        black_patterns << pattern
-
-        pattern = GamePattern.new
-        pattern[[0, 0]] = BlackPiece.new
-        pattern[[1, 1]] = BlackPiece.new
-        pattern[[2, 2]] = BlackPiece.new
-        pattern[[3, 3]] = BlackPiece.new
-        black_patterns << pattern
-
-        pattern = GamePattern.new
-        pattern[[3, 0]] = BlackPiece.new
-        pattern[[2, 1]] = BlackPiece.new
-        pattern[[1, 2]] = BlackPiece.new
-        pattern[[0, 3]] = BlackPiece.new
-        black_patterns << pattern
-
-        red_patterns = []
-        pattern = GamePattern.new
-        pattern[[0, 0]] = RedPiece.new
-        pattern[[0, 1]] = RedPiece.new
-        pattern[[0, 2]] = RedPiece.new
-        pattern[[0, 3]] = RedPiece.new
-        red_patterns << pattern
-
-        pattern = GamePattern.new
-        pattern[[0, 0]] = RedPiece.new
-        pattern[[1, 0]] = RedPiece.new
-        pattern[[2, 0]] = RedPiece.new
-        pattern[[3, 0]] = RedPiece.new
-        red_patterns << pattern
-
-        pattern = GamePattern.new
-        pattern[[0, 0]] = RedPiece.new
-        pattern[[1, 1]] = RedPiece.new
-        pattern[[2, 2]] = RedPiece.new
-        pattern[[3, 3]] = RedPiece.new
-        red_patterns << pattern
-
-        pattern = GamePattern.new
-        pattern[[3, 0]] = RedPiece.new
-        pattern[[2, 1]] = RedPiece.new
-        pattern[[1, 2]] = RedPiece.new
-        pattern[[0, 3]] = RedPiece.new
-        red_patterns << pattern
+    def test_player_board_connect4Mode
 
         p1 = Player.new(black_patterns, BlackPiece.new)
         p2 = Player.new(red_patterns, RedPiece.new)
