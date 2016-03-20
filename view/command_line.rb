@@ -22,7 +22,7 @@ class CommandLineView
 
         while (running)
             if @game_started
-                puts "#{eval('CMDController.get_player_playing.to_s')}> "
+                puts "#{eval('CMDController.get_player_playing.to_s')} Next Piece?> "
             else
                 puts "Prompt> "
             end
@@ -39,10 +39,7 @@ class CommandLineView
 
     def parse_command(user_input)
         # http://stackoverflow.com/questions/8258517/how-to-check-whether-a-string-contains-a-substring-in-ruby
-        if user_input[0].include? "print"
-            b = eval("CMDController.get_board")
-            self.pretty_print(b)
-        elsif user_input[0].downcase.include? "help"
+        if user_input[0].downcase.include? "help"
             puts " help: \n new: \n restart: \n"
         else
             if user_input[0].downcase.include? "new" or
@@ -56,6 +53,9 @@ class CommandLineView
                 @game_started = false
             end
             eval("CMDController.handle_event(#{user_input})")
+        end
+        if @game_started
+            self.pretty_print(eval("CMDController.get_board"))
         end
     end
 

@@ -82,6 +82,7 @@ class CMDController
     end
 
     def self.handle_event(commands)
+        i = Integer(commands[0]) rescue nil
         if commands[0].downcase.include? "new" or
           commands[0].downcase.include? "create"
             if commands[1].downcase.include? "connect"
@@ -96,9 +97,10 @@ class CMDController
             @players = []
             @board = nil
             @player_playing = nil
-        else
-            i = Integer(commands[0]) rescue nil
+        elsif i != nil
             self.take_turn(i)
+        else
+            puts "#{commands} not recognized."
         end
 
     end
