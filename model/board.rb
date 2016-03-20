@@ -1,5 +1,5 @@
-require "contracts"
-
+require 'contracts'
+require_relative 'player/player'
 class Board
 
     class ColumnFullError < Exception
@@ -14,21 +14,36 @@ class Board
     invariant(@width) {@width == @original_width}
     invariant(@height) {@height == @original_height}
 
-    Contract Contracts::Nat,Contracts::Nat => Any
+    attr_reader :piece_count
+
+    #Contract Contracts::Nat,Contracts::Nat => Any
 	def initialize(width, height)
         @original_width = width
         @original_height = height
 		@width = width
 		@height = height
-		@board = Hash.new
+		@board = Hash.new("*")
         @piece_count = 0
 	end
 
-    Contract ArrayOf[HashOf[[Nat, Nat], String]], Nat, Nat => Bool
-	def analyze(pattern_array, p_width, p_height)
-		#Looks for all the given patterns in the board
+    Contract ArrayOf[HashOf[[Nat, Nat], String]] => Bool
+	def analyze(pattern_array)
+		#Looks for all the given patterns in the board                
 
         pattern_array.each { |pattern|
+
+            p_width = 0
+            p_height = 0
+            # Find the width and height of the pattern
+            pattern.each { |key, value|
+                if key[0] >= p_height then
+                    p_height = key[0] + 1
+                end
+
+                if key[1] >= p_width then
+                    p_width = key[1] + 1
+                end
+            }
 
             for row in 0..@height - p_height
                 for column in 0..@width - p_width
@@ -61,31 +76,26 @@ class Board
         return true
     end
 
-    Contract Contracts::Nat, String  => nil
+    #Contract Contracts::Nat, String  => nil
 	def set_piece(column, piece)
         raise OutOfBounds unless column <= @width
 
         row = 1
-        while @board[row,column] != nil
+        while @board[[row,column]] != "*"
             row += 1
         end
         if row >= @height
-            return ColumnFullError
+            raise ColumnFullError
         else
-            @board[row,column] = piece
+            @board[[row,column]] = piece
             @piece_count += 1
         end
 
         return nil
 	end
 
-    Contract Contracts::Nat,Contracts::Nat => String
+    #Contract Contracts::Nat,Contracts::Nat => String
 	def get_player_on_pos(row, col)
-		return @board[row, col]
+		return @board[[row, col]]
 	end
-
-    Contract None => Contracts::Nat
-    def get_piece_count()
-        return 0
-    end
 end

@@ -3,69 +3,72 @@ require_relative "player/player"
 require_relative "player/ai_player"
 require_relative "board"
 require_relative "game/game"
+require_relative "game/connect4.rb"
 
 
 class Connect4ModelTest < Test::Unit::TestCase
 
     def test_player_board_connect4Mode
 
-        p1 = Player.new(black_patterns, BlackPiece.new)
-        p2 = Player.new(red_patterns, RedPiece.new)
+        game = Connect4.new()
 
-        b = Board.new(6,7)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 1)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 2)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 3)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        p1 = Player.new(game.p1_piece, game.p1_patterns)
+        p2 = Player.new(game.p2_piece, game.p2_patterns)
+
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 1)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 2)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 3)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
         assert_equal(b.analyze(p2.pattern_array), false,
                      "Wrongly calculated the game to be won.")
 
-        b = Board.new(6,7)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 1)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 2)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 3)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 1)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 2)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 3)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p1.pattern_array), false,
                      "Wrongly calculated the game to be won.")
         assert_equal(b.analyze(p2.pattern_array), true,
                      "Didn't detect win.")
 
-        b = Board.new(6,7)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 1)
-        b.set_piece(2, BlackPiece.new)
-        assert_equal(b.get_piece_count, 2)
-        b.set_piece(3, BlackPiece.new)
-        assert_equal(b.get_piece_count, 3)
-        b.set_piece(4, BlackPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 1)
+        b.set_piece(2, p1.piece)
+        assert_equal(b.piece_count, 2)
+        b.set_piece(3, p1.piece)
+        assert_equal(b.piece_count, 3)
+        b.set_piece(4, p1.piece)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
         assert_equal(b.analyze(p2.pattern_array), false,
                      "Wrongly calculated the game to be won.")
 
-        b = Board.new(6,7)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 1)
-        b.set_piece(2, RedPiece.new)
-        assert_equal(b.get_piece_count, 2)
-        b.set_piece(3, RedPiece.new)
-        assert_equal(b.get_piece_count, 3)
-        b.set_piece(4, RedPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 1)
+        b.set_piece(2, p2.piece)
+        assert_equal(b.piece_count, 2)
+        b.set_piece(3, p2.piece)
+        assert_equal(b.piece_count, 3)
+        b.set_piece(4, p2.piece)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p1.pattern_array), false,
                      "Wrongly calculated the game to be won.")
@@ -74,30 +77,30 @@ class Connect4ModelTest < Test::Unit::TestCase
 
 
         # Test diagonal win (/) for BlackPiece
-        b = Board.new(6,7)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 1)
 
-        b.set_piece(2, RedPiece.new)
-        assert_equal(b.get_piece_count, 2)
-        b.set_piece(2, BlackPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        b.set_piece(2, p2.piece)
+        assert_equal(b.piece_count, 2)
+        b.set_piece(2, p1.piece)
+        assert_equal(b.piece_count, 3)
 
-        b.set_piece(3, RedPiece.new)
-        assert_equal(b.get_piece_count, 4)
-        b.set_piece(3, RedPiece.new)
-        assert_equal(b.get_piece_count, 5)
-        b.set_piece(3, BlackPiece.new)
-        assert_equal(b.get_piece_count, 6)
+        b.set_piece(3, p2.piece)
+        assert_equal(b.piece_count, 4)
+        b.set_piece(3, p2.piece)
+        assert_equal(b.piece_count, 5)
+        b.set_piece(3, p1.piece)
+        assert_equal(b.piece_count, 6)
 
-        b.set_piece(4, RedPiece.new)
-        assert_equal(b.get_piece_count, 7)
-        b.set_piece(4, RedPiece.new)
-        assert_equal(b.get_piece_count, 8)
-        b.set_piece(4, RedPiece.new)
-        assert_equal(b.get_piece_count, 9)
-        b.set_piece(4, BlackPiece.new)
-        assert_equal(b.get_piece_count, 10)
+        b.set_piece(4, p2.piece)
+        assert_equal(b.piece_count, 7)
+        b.set_piece(4, p2.piece)
+        assert_equal(b.piece_count, 8)
+        b.set_piece(4, p2.piece)
+        assert_equal(b.piece_count, 9)
+        b.set_piece(4, p1.piece)
+        assert_equal(b.piece_count, 10)
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
@@ -105,30 +108,30 @@ class Connect4ModelTest < Test::Unit::TestCase
                      "Wrongly calculated the game to be won.")
 
         # Test diagonal win (\) for BlackPiece
-        b = Board.new(6,7)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 1)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 2)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 3)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 1)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 2)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 3)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 4)
 
-        b.set_piece(2, RedPiece.new)
-        assert_equal(b.get_piece_count, 5)
-        b.set_piece(2, RedPiece.new)
-        assert_equal(b.get_piece_count, 6)
-        b.set_piece(2, BlackPiece.new)
-        assert_equal(b.get_piece_count, 7)
+        b.set_piece(2, p2.piece)
+        assert_equal(b.piece_count, 5)
+        b.set_piece(2, p2.piece)
+        assert_equal(b.piece_count, 6)
+        b.set_piece(2, p1.piece)
+        assert_equal(b.piece_count, 7)
 
-        b.set_piece(3, RedPiece.new)
-        assert_equal(b.get_piece_count, 8)
-        b.set_piece(3, BlackPiece.new)
-        assert_equal(b.get_piece_count, 9)
+        b.set_piece(3, p2.piece)
+        assert_equal(b.piece_count, 8)
+        b.set_piece(3, p1.piece)
+        assert_equal(b.piece_count, 9)
 
-        b.set_piece(4, BlackPiece.new)
-        assert_equal(b.get_piece_count, 10)
+        b.set_piece(4, p1.piece)
+        assert_equal(b.piece_count, 10)
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
@@ -136,30 +139,30 @@ class Connect4ModelTest < Test::Unit::TestCase
                      "Wrongly calculated the game to be won.")
 
         # Test diagonal win (/) for RedPiece
-        b = Board.new(6,7)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 1)
 
-        b.set_piece(2, BlackPiece.new)
-        assert_equal(b.get_piece_count, 2)
-        b.set_piece(2, RedPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        b.set_piece(2, p1.piece)
+        assert_equal(b.piece_count, 2)
+        b.set_piece(2, p2.piece)
+        assert_equal(b.piece_count, 3)
 
-        b.set_piece(3, BlackPiece.new)
-        assert_equal(b.get_piece_count, 4)
-        b.set_piece(3, BlackPiece.new)
-        assert_equal(b.get_piece_count, 5)
-        b.set_piece(3, RedPiece.new)
-        assert_equal(b.get_piece_count, 6)
+        b.set_piece(3, p1.piece)
+        assert_equal(b.piece_count, 4)
+        b.set_piece(3, p1.piece)
+        assert_equal(b.piece_count, 5)
+        b.set_piece(3, p2.piece)
+        assert_equal(b.piece_count, 6)
 
-        b.set_piece(4, BlackPiece.new)
-        assert_equal(b.get_piece_count, 7)
-        b.set_piece(4, BlackPiece.new)
-        assert_equal(b.get_piece_count, 8)
-        b.set_piece(4, BlackPiece.new)
-        assert_equal(b.get_piece_count, 9)
-        b.set_piece(4, RedPiece.new)
-        assert_equal(b.get_piece_count, 10)
+        b.set_piece(4, p1.piece)
+        assert_equal(b.piece_count, 7)
+        b.set_piece(4, p1.piece)
+        assert_equal(b.piece_count, 8)
+        b.set_piece(4, p1.piece)
+        assert_equal(b.piece_count, 9)
+        b.set_piece(4, p2.piece)
+        assert_equal(b.piece_count, 10)
 
         assert_equal(b.analyze(p2.pattern_array), true,
                      "Didn't detect win.")
@@ -167,30 +170,30 @@ class Connect4ModelTest < Test::Unit::TestCase
                      "Wrongly calculated the game to be won.")
 
         # Test diagonal win (\) for RedPiece
-        b = Board.new(6,7)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 1)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 2)
-        b.set_piece(1, BlackPiece.new)
-        assert_equal(b.get_piece_count, 3)
-        b.set_piece(1, RedPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 1)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 2)
+        b.set_piece(1, p1.piece)
+        assert_equal(b.piece_count, 3)
+        b.set_piece(1, p2.piece)
+        assert_equal(b.piece_count, 4)
 
-        b.set_piece(2, BlackPiece.new)
-        assert_equal(b.get_piece_count, 5)
-        b.set_piece(2, BlackPiece.new)
-        assert_equal(b.get_piece_count, 6)
-        b.set_piece(2, RedPiece.new)
-        assert_equal(b.get_piece_count, 7)
+        b.set_piece(2, p1.piece)
+        assert_equal(b.piece_count, 5)
+        b.set_piece(2, p1.piece)
+        assert_equal(b.piece_count, 6)
+        b.set_piece(2, p2.piece)
+        assert_equal(b.piece_count, 7)
 
-        b.set_piece(3, BlackPiece.new)
-        assert_equal(b.get_piece_count, 8)
-        b.set_piece(3, RedPiece.new)
-        assert_equal(b.get_piece_count, 9)
+        b.set_piece(3, p1.piece)
+        assert_equal(b.piece_count, 8)
+        b.set_piece(3, p2.piece)
+        assert_equal(b.piece_count, 9)
 
-        b.set_piece(4, RedPiece.new)
-        assert_equal(b.get_piece_count, 10)
+        b.set_piece(4, p2.piece)
+        assert_equal(b.piece_count, 10)
 
         assert_equal(b.analyze(p2.pattern_array), true,
                      "Didn't detect win.")
@@ -262,13 +265,13 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         b = Board.new(6,7)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
         b.set_piece(1, TPiece.new)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
         b.set_piece(1, TPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
@@ -277,13 +280,13 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         b = Board.new(6,7)
         b.set_piece(1, TPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
         b.set_piece(1, TPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p1.pattern_array), false,
                      "Wrongly calculated the game to be won.")
@@ -292,13 +295,13 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         b = Board.new(6,7)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
         b.set_piece(2, TPiece.new)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
         b.set_piece(3, TPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
         b.set_piece(4, OPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
@@ -307,13 +310,13 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         b = Board.new(6,7)
         b.set_piece(1, TPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
         b.set_piece(2, OPiece.new)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
         b.set_piece(3, OPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
         b.set_piece(4, TPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p1.pattern_array), false,
                      "Wrongly calculated the game to be won.")
@@ -324,28 +327,28 @@ class Connect4ModelTest < Test::Unit::TestCase
         # Test diagonal win (/) for p1 piece
         b = Board.new(6,7)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
 
         b.set_piece(2, TPiece.new)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
         b.set_piece(2, TPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
 
         b.set_piece(3, TPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
         b.set_piece(3, TPiece.new)
-        assert_equal(b.get_piece_count, 5)
+        assert_equal(b.piece_count, 5)
         b.set_piece(3, TPiece.new)
-        assert_equal(b.get_piece_count, 6)
+        assert_equal(b.piece_count, 6)
 
         b.set_piece(4, TPiece.new)
-        assert_equal(b.get_piece_count, 7)
+        assert_equal(b.piece_count, 7)
         b.set_piece(4, TPiece.new)
-        assert_equal(b.get_piece_count, 8)
+        assert_equal(b.piece_count, 8)
         b.set_piece(4, TPiece.new)
-        assert_equal(b.get_piece_count, 9)
+        assert_equal(b.piece_count, 9)
         b.set_piece(4, OPiece.new)
-        assert_equal(b.get_piece_count, 10)
+        assert_equal(b.piece_count, 10)
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
@@ -355,28 +358,28 @@ class Connect4ModelTest < Test::Unit::TestCase
         # Test diagonal win (\) for p1 piece
         b = Board.new(6,7)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
         b.set_piece(1, TPiece.new)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
         b.set_piece(1, TPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
 
         b.set_piece(2, TPiece.new)
-        assert_equal(b.get_piece_count, 5)
+        assert_equal(b.piece_count, 5)
         b.set_piece(2, TPiece.new)
-        assert_equal(b.get_piece_count, 6)
+        assert_equal(b.piece_count, 6)
         b.set_piece(2, TPiece.new)
-        assert_equal(b.get_piece_count, 7)
+        assert_equal(b.piece_count, 7)
 
         b.set_piece(3, TPiece.new)
-        assert_equal(b.get_piece_count, 8)
+        assert_equal(b.piece_count, 8)
         b.set_piece(3, TPiece.new)
-        assert_equal(b.get_piece_count, 9)
+        assert_equal(b.piece_count, 9)
 
         b.set_piece(4, OPiece.new)
-        assert_equal(b.get_piece_count, 10)
+        assert_equal(b.piece_count, 10)
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
@@ -386,28 +389,28 @@ class Connect4ModelTest < Test::Unit::TestCase
         # Test diagonal win (/) for p2 piece
         b = Board.new(6,7)
         b.set_piece(1, TPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
 
         b.set_piece(2, OPiece.new)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
         b.set_piece(2, OPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
 
         b.set_piece(3, OPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
         b.set_piece(3, OPiece.new)
-        assert_equal(b.get_piece_count, 5)
+        assert_equal(b.piece_count, 5)
         b.set_piece(3, OPiece.new)
-        assert_equal(b.get_piece_count, 6)
+        assert_equal(b.piece_count, 6)
 
         b.set_piece(4, OPiece.new)
-        assert_equal(b.get_piece_count, 7)
+        assert_equal(b.piece_count, 7)
         b.set_piece(4, OPiece.new)
-        assert_equal(b.get_piece_count, 8)
+        assert_equal(b.piece_count, 8)
         b.set_piece(4, OPiece.new)
-        assert_equal(b.get_piece_count, 9)
+        assert_equal(b.piece_count, 9)
         b.set_piece(4, TPiece.new)
-        assert_equal(b.get_piece_count, 10)
+        assert_equal(b.piece_count, 10)
 
         assert_equal(b.analyze(p2.pattern_array), true,
                      "Didn't detect win.")
@@ -417,28 +420,28 @@ class Connect4ModelTest < Test::Unit::TestCase
         # Test diagonal win (\) for p2 piece
         b = Board.new(6,7)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
         b.set_piece(1, OPiece.new)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
         b.set_piece(1, TPiece.new)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
 
         b.set_piece(2, OPiece.new)
-        assert_equal(b.get_piece_count, 5)
+        assert_equal(b.piece_count, 5)
         b.set_piece(2, OPiece.new)
-        assert_equal(b.get_piece_count, 6)
+        assert_equal(b.piece_count, 6)
         b.set_piece(2, OPiece.new)
-        assert_equal(b.get_piece_count, 7)
+        assert_equal(b.piece_count, 7)
 
         b.set_piece(3, OPiece.new)
-        assert_equal(b.get_piece_count, 8)
+        assert_equal(b.piece_count, 8)
         b.set_piece(3, OPiece.new)
-        assert_equal(b.get_piece_count, 9)
+        assert_equal(b.piece_count, 9)
 
         b.set_piece(4, TPiece.new)
-        assert_equal(b.get_piece_count, 10)
+        assert_equal(b.piece_count, 10)
 
         assert_equal(b.analyze(p2.pattern_array), true,
                      "Didn't detect win.")
@@ -450,7 +453,7 @@ class Connect4ModelTest < Test::Unit::TestCase
     def test_board_placement
         b = Board.new(1,1)
 
-        b.set_piece(1, BlackPiece.new)
+        b.set_piece(1, p1.piece)
         piece = b.get_piece(1,1)
         assert(piece.is_a?(GamePiece),
                "Piece at position (1,1) is not a GamePiece.")
@@ -509,32 +512,32 @@ class Connect4ModelTest < Test::Unit::TestCase
         p2 = AIPlayer.new(red_patterns, RedPiece.new)
 
         b = Board.new(1,1)
-        assert_equal(b.get_piece_count, 0)
+        assert_equal(b.piece_count, 0)
         p1.play(b)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
         assert(b.get_piece(1,1).is_a? BlackPiece)
 
         b = Board.new(1,1)
-        assert_equal(b.get_piece_count, 0)
+        assert_equal(b.piece_count, 0)
         p2.play(b)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
         assert(b.get_piece(1,1).is_a? RedPiece)
 
 
         b = Board.new(6,7)
-        assert_equal(b.get_piece_count, 0)
+        assert_equal(b.piece_count, 0)
 
         p1.play(b)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
 
         p1.play(b)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
 
         p1.play(b)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
 
         p1.play(b)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
@@ -542,19 +545,19 @@ class Connect4ModelTest < Test::Unit::TestCase
                      "Wrongly calculated the game to be won.")
 
         b = Board.new(6,7)
-        assert_equal(b.get_piece_count, 0)
+        assert_equal(b.piece_count, 0)
 
         p2.play(b)
-        assert_equal(b.get_piece_count, 1)
+        assert_equal(b.piece_count, 1)
 
         p2.play(b)
-        assert_equal(b.get_piece_count, 2)
+        assert_equal(b.piece_count, 2)
 
         p2.play(b)
-        assert_equal(b.get_piece_count, 3)
+        assert_equal(b.piece_count, 3)
 
         p2.play(b)
-        assert_equal(b.get_piece_count, 4)
+        assert_equal(b.piece_count, 4)
 
         assert_equal(b.analyze(p2.pattern_array), true,
                      "Didn't detect win.")
