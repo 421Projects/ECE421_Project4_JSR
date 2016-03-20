@@ -4,6 +4,7 @@ require_relative "../model/player/real_player"
 require_relative "../model/game/game"
 require_relative "../model/game/connect4"
 require 'contracts'
+require 'observer'
 
 class CMDController
 
@@ -12,9 +13,10 @@ class CMDController
     include Contracts::Invariants
 
     #Contract None => Any
-    def self.initialize()
+    def self.initialize(observer_views)
         Dir["../model/game/*"].each {|file| require_relative file }
 
+        @observer_views = observer_views.to_a
         @players = []
         @board = nil
         @player_playing = nil
@@ -34,12 +36,20 @@ class CMDController
             names = ["A", "R"]
             for i in 1..@AI_players
                 puts "creating ai"
-                @players.push(AIPlayer.new(names.pop, patterns.pop))
+                ai = AIPlayer.new(names.pop, patterns.pop)
+                for obj in @observer_views
+                    ai.add_observer(obj)
+                end
+                @players.push(ai)
             end
 
             while @players.size < 2 # number of players
                 puts "creating real"
-                @players.push(RealPlayer.new(names.pop, patterns.pop))
+                re = RealPlayer.new(names.pop, patterns.pop)
+                for obj in @observer_views
+                    re.add_observer(obj)
+                end
+                @players.push(re)
             end
             @board = Board.new(@game.board_width, @game.board_height)
             @player_playing = @players.shuffle[0]
@@ -61,6 +71,12 @@ class CMDController
             @board.set_piece(@player_playing.play(@board)-1, @player_playing.piece)
         else
             @board.set_piece(arg-1, @player_playing.piece)
+        end
+
+        w = @board.analyze(@player_playing.pattern_array)
+        @player_playing.won?(w)
+        if w # game over, no need to switch turns
+            return
         end
         # switch turns
         @player_playing = @players[@players.index(@player_playing)+1]
@@ -85,7 +101,7 @@ class CMDController
         i = Integer(commands[0]) rescue nil
         if commands[0].downcase.include? "new" or
           commands[0].downcase.include? "create"
-            if commands[1].downcase.include? "connect"
+            if commands[1].downcase.include? "conn"
                 self.create_game("Connect4")
             elsif commands[1].downcase.include? "otto"
                 self.create_game("OttoToot")

@@ -1,4 +1,5 @@
 require 'contracts'
+require 'observer'
 require_relative 'player/player'
 class Board
 

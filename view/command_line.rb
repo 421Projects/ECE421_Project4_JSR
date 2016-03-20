@@ -1,5 +1,6 @@
 require_relative "../controller/commandline_controller"
 require 'contracts'
+require 'observer'
 
 class CommandLineView
 
@@ -12,12 +13,13 @@ class CommandLineView
     Contract None => nil
     def initialize()
         @game_started = false
+        @game_finished = false
         return nil
     end
 
     Contract None => nil
     def start_game()
-        eval("CMDController.initialize")
+        CMDController.initialize([self])
         running = true
 
         while (running)
@@ -37,6 +39,15 @@ class CommandLineView
         return gets.chomp.split
     end
 
+    def update(player)
+        puts "#{player.to_s} has won!"
+        # self.pretty_print(eval("CMDController.get_board"))
+        self.pretty_print(CMDController.get_board)
+        #eval("CMDController.handle_event(['reset'])")
+        CMDController.handle_event(['reset'])
+        @game_started = false
+    end
+
     def parse_command(user_input)
         # http://stackoverflow.com/questions/8258517/how-to-check-whether-a-string-contains-a-substring-in-ruby
         if user_input[0].downcase.include? "help"
@@ -52,7 +63,8 @@ class CommandLineView
                  user_input[0].downcase.include? "restart"
                 @game_started = false
             end
-            eval("CMDController.handle_event(#{user_input})")
+            CMDController.handle_event(user_input)
+            #eval("CMDController.handle_event(#{user_input})")
         end
         if @game_started
             self.pretty_print(eval("CMDController.get_board"))
