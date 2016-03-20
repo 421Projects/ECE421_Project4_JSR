@@ -41,6 +41,9 @@ class CMDController
 
     #Contract Maybe[Nat] => nil
     def self.take_turn(arg)
+        if arg == nil
+            return arg
+        end
         if @player_playing.is_a? AIPlayer
             @board.set_piece(player.play(@board), @player_playing)
         else
@@ -72,11 +75,9 @@ class CMDController
             @board = nil
             @player_playing = nil
         else
-            begin
-                self.take_turn(Integer(commands[0]))
-            rescue
-                puts "#{commands} not handled."
-            end
+            i = Integer(commands[0]) rescue nil
+            puts i
+            self.take_turn(i)
         end
 
     end

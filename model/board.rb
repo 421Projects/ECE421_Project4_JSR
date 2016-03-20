@@ -74,7 +74,7 @@ class Board
         if row >= @height
             raise ColumnFullError
         else
-            @board[[row,column]] = player
+            @board[[row,column]] = piece
             @piece_count += 1
         end
 

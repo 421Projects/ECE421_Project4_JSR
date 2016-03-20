@@ -19,21 +19,5 @@ class GameMode
         raise NotImplementedError, "Objects that extend GameMode must provide their own constructor."
     end
 
-    def get_pattern(player)
-        if patterns[player] == nil
-            raise NotImplementedError, "#{player} pattern not implemented."
-        else
-            return patterns[player]
-        end
-    end
-
-    def get_piece(player)
-        if pieces[player] == nil
-            raise NotImplementedError, "#{player} piece not implemented."
-        else
-            return pieces[player]
-        end
-    end
-
 end
 
