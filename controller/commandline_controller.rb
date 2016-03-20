@@ -43,6 +43,9 @@ class CMDController
             end
             @board = Board.new(@game.board_width, @game.board_height)
             @player_playing = @players.shuffle[0]
+            if @player_playing.is_a? AIPlayer
+                self.take_turn(0)
+            end
         else
             raise StandardError, "#{gameClazz} not a Game."
         end
@@ -63,6 +66,9 @@ class CMDController
         @player_playing = @players[@players.index(@player_playing)+1]
         if @player_playing == nil
             @player_playing = @players[0]
+        end
+        if @player_playing.is_a? AIPlayer
+            self.take_turn(0)
         end
         return nil
     end
