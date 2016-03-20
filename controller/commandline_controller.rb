@@ -32,8 +32,8 @@ class CMDController
         gameClazz = Object.const_get(game) # GameMode
         if gameClazz.superclass == GameMode
             @game = gameClazz.new()
-            patterns = [@game.p2_patterns, @game.p1_patterns]
-            names = ["A", "R"]
+            patterns = [@game.p1_patterns, @game.p2_patterns]
+            names = [@game.p1_piece, @game.p2_piece]
             for i in 1..@AI_players
                 puts "creating ai"
                 ai = AIPlayer.new(names.pop, patterns.pop)
@@ -68,9 +68,9 @@ class CMDController
             return arg
         end
         if @player_playing.is_a? AIPlayer
-            @board.set_piece(@player_playing.play(@board)-1, @player_playing.piece)
+            @board.set_piece(@player_playing.play(@board), @player_playing.piece)
         else
-            @board.set_piece(arg-1, @player_playing.piece)
+            @board.set_piece(arg, @player_playing.piece)
         end
 
         p = @player_playing

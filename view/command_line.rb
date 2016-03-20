@@ -10,19 +10,22 @@ class CommandLineView
 
     @@commands = ["new", "print", "place", "quit"]
 
+    attr_accessor :game_started, :running
+
     Contract None => nil
     def initialize()
         @game_started = false
         @game_finished = false
+        @running = false
         return nil
     end
 
     Contract None => nil
     def start_game()
         CMDController.initialize([self])
-        running = true
+        @running = true
 
-        while (running)
+        while (@running)
             if @game_started
                 puts "#{eval('CMDController.get_player_playing.to_s')} Next Piece?> "
             else
@@ -76,8 +79,8 @@ class CommandLineView
     def pretty_print(board)
         puts board.board
         board_pic = ""
-        for r in board.height.downto(0)
-            for c in 0..board.width
+        for r in board.height.downto(1)
+            for c in 1..board.width
                 # board_pic += "(#{r},#{c})[#{board.get_player_on_pos(r,c).piece}], "
                 board_pic += "[#{board.board[[r,c]]}], "
             end
