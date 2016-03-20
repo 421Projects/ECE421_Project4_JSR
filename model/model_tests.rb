@@ -397,6 +397,10 @@ class Connect4ModelTest < Test::Unit::TestCase
 
 
     def test_board_placement
+        game = Connect4.new()
+
+        p1 = Player.new(game.p1_piece, game.p1_patterns)
+
         b = Board.new(1,1)
 
         b.set_piece(1, p1.piece)
@@ -438,39 +442,13 @@ class Connect4ModelTest < Test::Unit::TestCase
     end
 
     def test_ai_basic_play
-        red_patterns = []
-        pattern = GamePattern.new
-        pattern[[0, 0]] = RedPiece.new
-        pattern[[0, 1]] = RedPiece.new
-        pattern[[0, 2]] = RedPiece.new
-        pattern[[0, 3]] = RedPiece.new
-        red_patterns << pattern
 
-        black_patterns = []
-        pattern = GamePattern.new
-        pattern[[0, 0]] = BlackPiece.new
-        pattern[[0, 1]] = BlackPiece.new
-        pattern[[0, 2]] = BlackPiece.new
-        pattern[[0, 3]] = BlackPiece.new
-        black_patterns << pattern
+        game = Connect4.new()
 
-        p1 = AIPlayer.new(black_patterns, BlackPiece.new)
-        p2 = AIPlayer.new(red_patterns, RedPiece.new)
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns)
+        p2 = AIPlayer.new(game.p2_piece, game.p2_patterns)
 
-        b = Board.new(1,1)
-        assert_equal(b.piece_count, 0)
-        p1.play(b)
-        assert_equal(b.piece_count, 1)
-        assert(b.get_piece(1,1).is_a? BlackPiece)
-
-        b = Board.new(1,1)
-        assert_equal(b.piece_count, 0)
-        p2.play(b)
-        assert_equal(b.piece_count, 1)
-        assert(b.get_piece(1,1).is_a? RedPiece)
-
-
-        b = Board.new(6,7)
+        b = Board.new(game.board_height, game.board_width)
         assert_equal(b.piece_count, 0)
 
         p1.play(b)
@@ -490,7 +468,7 @@ class Connect4ModelTest < Test::Unit::TestCase
         assert_equal(b.analyze(p2.pattern_array), false,
                      "Wrongly calculated the game to be won.")
 
-        b = Board.new(6,7)
+        b = Board.new(game.board_height, game.board_width)
         assert_equal(b.piece_count, 0)
 
         p2.play(b)
@@ -515,12 +493,6 @@ class Connect4ModelTest < Test::Unit::TestCase
     def test_game_constructor
         assert_raise NotImplementedError do
             thrown = GameMode.new
-        end
-    end
-
-    def test_game_piece_constructor
-        assert_raise NotImplementedError do
-            thrown = GamePiece.new
         end
     end
 
