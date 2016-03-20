@@ -73,8 +73,10 @@ class CMDController
             @board.set_piece(arg-1, @player_playing.piece)
         end
 
+        p = @player_playing
         w = @board.analyze(@player_playing.pattern_array)
         @player_playing.won?(w)
+        puts "#{p.to_s} won status is #{p.won}"
         if w # game over, no need to switch turns
             return
         end

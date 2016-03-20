@@ -50,7 +50,9 @@ class CommandLineView
 
     def parse_command(user_input)
         # http://stackoverflow.com/questions/8258517/how-to-check-whether-a-string-contains-a-substring-in-ruby
-        if user_input[0].downcase.include? "help"
+        if user_input == nil or user_input[0] == nil
+            return
+        elsif user_input[0].downcase.include? "help"
             puts " help: \n new: \n restart: \n"
         else
             if user_input[0].downcase.include? "new" or
