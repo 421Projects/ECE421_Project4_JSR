@@ -36,7 +36,7 @@ class CMDController
             names = [@game.p1_piece, @game.p2_piece]
             for i in 1..@AI_players
                 puts "creating ai"
-                ai = AIPlayer.new(names.pop, patterns.pop)
+                ai = AIPlayer.new(@game.p1_piece, @game.p1_patterns, @game.p2_piece, @game.p2_patterns)
                 for obj in @observer_views
                     ai.add_observer(obj)
                 end
@@ -68,7 +68,7 @@ class CMDController
             return arg
         end
         if @player_playing.is_a? AIPlayer
-            @board.set_piece(@player_playing.play(@board), @player_playing.piece)
+            @player_playing.play(@board)
         else
             @board.set_piece(arg, @player_playing.piece)
         end
@@ -113,6 +113,7 @@ class CMDController
         elsif commands[0].downcase.include? "restart" or
           commands[0].downcase.include? "reset"
             @players = []
+            puts "POOOOOOOOOOOOOOOOOOOOP"
             @board = nil
             @player_playing = nil
         elsif i != nil
