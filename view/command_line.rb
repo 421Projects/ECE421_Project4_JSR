@@ -25,8 +25,8 @@ class CommandLineView
         CMDController.initialize([self])
         @running = true
 
-        while (@running)
-            if @game_started
+        while (running)
+            if CMDController.game_started?
                 puts "#{eval('CMDController.get_player_playing.to_s')} Next Piece?> "
             else
                 puts "Prompt> "
@@ -68,13 +68,21 @@ class CommandLineView
               user_input[0].downcase.include? "create"
                 puts "how many AIs?"
                 count = gets.chomp
-                eval("CMDController.handle_event(['ai',#{count}])")
-                @game_started = true
+                user_input << count
+                #eval("CMDController.handle_event(['ai',#{count}])")
             elsif user_input[0].downcase.include? "reset" or
                  user_input[0].downcase.include? "restart"
                 @game_started = false
             end
-            CMDController.handle_event(user_input)
+            begin
+                CMDController.handle_event(user_input)
+            rescue CMDController::ModeNotSupported => mns
+                puts mns.message
+                return
+            rescue CMDController::CommandNotSupported => cns
+                puts cns.message
+                return
+            end
             #eval("CMDController.handle_event(#{user_input})")
         end
     end

@@ -12,10 +12,18 @@ class CMDController
     include Contracts::Builtin
     include Contracts::Invariants
 
+    class CommandNotSupported < Exception
+    end
+    class ModeNotSupported < Exception
+    end
+
+    attr_reader :game_started
+
     #Contract None => Any
     def self.initialize(observer_views)
         Dir["../model/game/*"].each {|file| require_relative file }
 
+        @game_started = false
         @observer_views = observer_views.to_a
         @players = []
         @board = nil
@@ -27,16 +35,27 @@ class CMDController
         return @player_playing
     end
 
+    def self.game_started?
+        @game_started
+    end
+
     #Contract String => GameMode
-    def self.create_game(game)
+    def self.create_game(game, ai_players=0)
+        if ai_players.is_a? Numeric
+            @AI_players = ai_players
+        else
+            @AI_players = 0
+        end
         gameClazz = Object.const_get(game) # GameMode
         if gameClazz.superclass == GameMode
             @game = gameClazz.new()
+            @game_started = true
             patterns = [@game.p1_patterns, @game.p2_patterns]
             names = [@game.p1_piece, @game.p2_piece]
-            for i in 1..@AI_players
+            for i in 0..(@AI_players-1)
                 puts "creating ai"
-                ai = AIPlayer.new(names.pop, patterns.pop, names[0], patterns[0])
+                ai = AIPlayer.new(names[i], patterns[i],
+                                  names[i+1] || names[0], patterns[i+1] || patterns[0])
                 for obj in @observer_views
                     ai.add_observer(obj)
                 end
@@ -103,22 +122,26 @@ class CMDController
         i = Integer(commands[0]) rescue nil
         if commands[0].downcase.include? "new" or
           commands[0].downcase.include? "create"
+            ai_count = Integer(commands[2]) rescue nil
             if commands[1].downcase.include? "conn"
-                self.create_game("Connect4")
+                self.create_game("Connect4", ai_count)
             elsif commands[1].downcase.include? "otto"
-                self.create_game("OttoToot")
+                self.create_game("OttoToot", ai_count)
+            else
+                raise ModeNotSupported, "#{commands[1]} mode not supported."
             end
         elsif commands[0].downcase.include? "ai"
             self.set_AIs(Integer(commands[1]))
         elsif commands[0].downcase.include? "restart" or
-          commands[0].downcase.include? "reset"
+             commands[0].downcase.include? "reset"
             @players = []
             @board = nil
             @player_playing = nil
+            @game_started = false
         elsif i != nil
             self.take_turn(i)
         else
-            puts "#{commands} not recognized."
+            raise CommandNotSupported, "#{commands} not supported."
         end
 
     end
@@ -134,4 +157,3 @@ class CMDController
     end
 
 end
-
