@@ -394,52 +394,6 @@ class Connect4ModelTest < Test::Unit::TestCase
                      "Wrongly calculated the game to be won.")
     end
 
-
-    def test_board_placement
-        game = Connect4.new()
-
-        p1 = Player.new(game.p1_piece, game.p1_patterns)
-
-        b = Board.new(1,1)
-
-        b.set_piece(1, p1.piece)
-        piece = b.get_piece(1,1)
-        assert(piece.is_a?(GamePiece),
-               "Piece at position (1,1) is not a GamePiece.")
-        assert(b.get_piece(1,1).is_a?(BlackPiece),
-               "Piece at position (1,1) is not a BlackPiece.")
-
-        assert_raise do
-            b.set_piece(1, BlackPiece.new)
-        end
-        assert_raise do
-            b.set_piece(1, RedPiece.new)
-        end
-        assert(b.get_piece(1,1).is_a?(GamePiece),
-               "Piece at position (1,1) is not a GamePiece.")
-        assert(b.get_piece(1,1).is_a?(BlackPiece),
-               "Piece at position (1,1) is not a BlackPiece.")
-
-        assert_raise do
-            b.set_piece(2341, BlackPiece.new)
-        end
-
-        assert_raise do
-            b.set_piece(1)
-        end
-
-        assert_raise do
-            b.set_piece(BlackPiece.new)
-        end
-
-        assert_raise do
-            b.set_piece(RedPiece.new)
-        end
-
-        assert_equal(b.analyze, false,
-                     "Wrongly calculated the game to be won.")
-    end
-
     def test_ai_score_of_board
         game = Connect4.new()
 
