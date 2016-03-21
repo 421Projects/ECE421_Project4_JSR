@@ -454,6 +454,35 @@ class Connect4ModelTest < Test::Unit::TestCase
         assert_equal(15, p1.score_of_board(b))
     end
 
+    def test_ai_heuristic
+        game = Connect4.new()
+
+        b = Board.new(game.board_height, game.board_width)
+
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_patterns)
+
+        pattern1 = {}
+        pattern1[[0, 0]] = game.p1_piece
+        pattern1[[0, 1]] = game.p1_piece
+        pattern1[[0, 2]] = game.p1_piece
+        pattern1[[0, 3]] = game.p1_piece
+
+        pattern2 = {}
+        pattern2[[0, 0]] = game.p1_piece
+        pattern2[[1, 0]] = game.p1_piece
+        pattern2[[2, 0]] = game.p1_piece
+        pattern2[[3, 0]] = game.p1_piece
+
+        assert_equal(0, p1.heuristic(pattern1, b, 0, 0))
+
+        b.set_piece(0, game.p1_piece)
+        assert_equal(1, p1.heuristic(pattern1, b, 0, 0))
+
+        b.set_piece(0, game.p1_piece)
+        assert_equal(1, p1.heuristic(pattern1, b, 0, 0))
+        assert_equal(10, p1.heuristic(pattern2, b, 0, 0))
+    end
+
     def test_ai_basic_play
 
         game = Connect4.new()
