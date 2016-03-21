@@ -1,5 +1,6 @@
 require_relative "../controller/commandline_controller"
 require 'contracts'
+require 'observer'
 
 class CommandLineView
 
@@ -9,18 +10,22 @@ class CommandLineView
 
     @@commands = ["new", "print", "place", "quit"]
 
+    attr_accessor :game_started, :running
+
     Contract None => nil
     def initialize()
         @game_started = false
+        @game_finished = false
+        @running = false
         return nil
     end
 
     Contract None => nil
     def start_game()
-        eval("CMDController.initialize")
-        running = true
+        CMDController.initialize([self])
+        @running = true
 
-        while (running)
+        while (@running)
             if @game_started
                 puts "#{eval('CMDController.get_player_playing.to_s')} Next Piece?> "
             else
@@ -37,9 +42,20 @@ class CommandLineView
         return gets.chomp.split
     end
 
+    def update(player)
+        puts "#{player.to_s} has won!"
+        # self.pretty_print(eval("CMDController.get_board"))
+        self.pretty_print(CMDController.get_board)
+        #eval("CMDController.handle_event(['reset'])")
+        CMDController.handle_event(['reset'])
+        @game_started = false
+    end
+
     def parse_command(user_input)
         # http://stackoverflow.com/questions/8258517/how-to-check-whether-a-string-contains-a-substring-in-ruby
-        if user_input[0].downcase.include? "help"
+        if user_input == nil or user_input[0] == nil
+            return
+        elsif user_input[0].downcase.include? "help"
             puts " help: \n new: \n restart: \n"
         else
             if user_input[0].downcase.include? "new" or
@@ -52,7 +68,8 @@ class CommandLineView
                  user_input[0].downcase.include? "restart"
                 @game_started = false
             end
-            eval("CMDController.handle_event(#{user_input})")
+            CMDController.handle_event(user_input)
+            #eval("CMDController.handle_event(#{user_input})")
         end
         if @game_started
             self.pretty_print(eval("CMDController.get_board"))
@@ -62,8 +79,8 @@ class CommandLineView
     def pretty_print(board)
         puts board.board
         board_pic = ""
-        for r in board.height.downto(0)
-            for c in 0..board.width
+        for r in board.height.downto(1)
+            for c in 1..board.width
                 # board_pic += "(#{r},#{c})[#{board.get_player_on_pos(r,c).piece}], "
                 board_pic += "[#{board.board[[r,c]]}], "
             end

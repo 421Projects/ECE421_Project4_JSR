@@ -1,4 +1,5 @@
 require 'contracts'
+require 'observer'
 require_relative 'player/player'
 class Board
 
@@ -87,7 +88,7 @@ class Board
 	def set_piece(column, piece)
         raise OutOfBounds unless column <= @width
 
-        row = 0
+        row = 1
         while @board[[row,column]] != "*"
             row += 1
         end

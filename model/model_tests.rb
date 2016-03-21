@@ -6,7 +6,6 @@ require_relative "game/game"
 require_relative "game/connect4"
 require_relative "game/otto_toot"
 
-
 class Connect4ModelTest < Test::Unit::TestCase
 
     def test_player_board_connect4Mode
