@@ -441,12 +441,26 @@ class Connect4ModelTest < Test::Unit::TestCase
                      "Wrongly calculated the game to be won.")
     end
 
+    def test_ai_score_of_board
+        game = Connect4.new()
+
+        b = Board.new(game.board_height, game.board_width)
+
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_patterns)
+
+        b.set_piece(0, game.p1_piece)
+        assert_equal(3, p1.score_of_board(b))
+
+        b.set_piece(0, game.p1_piece)
+        assert_equal(15, p1.score_of_board(b))
+    end
+
     def test_ai_basic_play
 
         game = Connect4.new()
 
-        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns)
-        p2 = AIPlayer.new(game.p2_piece, game.p2_patterns)
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_patterns)
+        p2 = AIPlayer.new(game.p2_piece, game.p2_patterns, game.p1_patterns)
 
         b = Board.new(game.board_height, game.board_width)
         assert_equal(b.piece_count, 0)

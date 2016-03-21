@@ -8,21 +8,55 @@ class AIPlayer < Player
     include Contracts::Invariants
 
     Contract String, ArrayOf[HashOf[[Nat, Nat], String]], ArrayOf[HashOf[[Nat, Nat], String]] => Any
-    def initialize(piece, patterns, opposing_patterns, name=piece+":Player")
+    def initialize(piece, patterns, opposing_patterns, depth = 3, name=piece+":Player")
         @original_piece = piece
         @piece = @original_piece
         @name = name
         @pattern_array = patterns
         @opposing_patterns = opposing_patterns
+        @depth = depth
     end
 
     def play(board_to_play)
-        # Enact the AI strategy here
-        return (rand*board_to_play.width).to_i
+        board_to_play.set_piece(minmax(board_to_play, @depth)[1], @piece)
     end
 
+    Contract Board, Nat => ArrayOf[Integer]
+    def minmax(board, depth)        
+        depth = depth - 1
+        best_value = -9999999
+        best_index = -1
+
+        board.width.times do |index|
+            new_board = board.copy
+            begin                
+                new_board.set_piece(index, @piece)
+            rescue ColumnFullError
+                next
+            end            
+
+            if depth <= 0
+                score = score_of_board(new_board)
+                if score > best_value
+                    best_value = score
+                    best_index = index
+                end
+
+                return [best_value, best_index]
+            else
+                score = minmax(new_board, depth)
+                if score[0] > best_value
+                    best_value = score[0]
+                    best_index = score[1]
+                end
+            end            
+        end
+        return [best_value, best_index]     
+    end
+
+    Contract HashOf[[Nat, Nat], String], Board => Integer
     def score_of_pattern(pattern, board)
-        value = 0
+        score = 0
         p_width = 0
         p_height = 0
 
@@ -38,21 +72,22 @@ class AIPlayer < Player
 
         (board.height - (p_height - 1)).times do |row|
             (board.width - (p_width - 1)).times do |column|
-                value = value + heuristic(pattern, board, row, column)
+                score = score + heuristic(pattern, board, row, column)
             end
         end
 
-        return value
+        return score
     end
 
+    Contract Board => Integer
     def score_of_board(board)
         value = 0
-        @pattern_array.each do |value|
-            value = value + score_of_pattern(value, board)
+        @pattern_array.each do |pattern|
+            value = value + score_of_pattern(pattern, board)
         end
 
-        @opposing_patterns.each do |value|
-            value = score_of_pattern(value, board) - value
+        @opposing_patterns.each do |pattern|
+            value = score_of_pattern(pattern, board) - value
         end
 
         return value
@@ -61,7 +96,7 @@ class AIPlayer < Player
     # This function searches a single spot of the board.
     # It asigns scores based upon how closely the board position described,
     # matches the pattern. 
-    Contract HashOf[[Nat, Nat], String], HashOf[[Nat, Nat], String], Nat, Nat => Integer
+    Contract HashOf[[Nat, Nat], String], Board, Nat, Nat => Integer
     def heuristic(pattern, board, row_offset, col_offset)
         good_pieces = 0
 
@@ -76,6 +111,10 @@ class AIPlayer < Player
             end
         end
 
-        return 10 ** (good_pieces - 1)
+        if good_pieces == 0
+            return 0
+        else
+            return 10 ** (good_pieces - 1)
+        end        
     end
 end

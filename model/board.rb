@@ -14,7 +14,8 @@ class Board
     invariant(@width) {@width == @original_width}
     invariant(@height) {@height == @original_height}
 
-    attr_reader :piece_count, :board, :height, :width
+    attr_reader :piece_count, :height, :width
+    attr_accessor :board
 
     #Contract Contracts::Nat,Contracts::Nat => Any
 	def initialize(width, height)
@@ -25,6 +26,12 @@ class Board
 		@board = Hash.new("*")
         @piece_count = 0
 	end
+
+    def copy()
+        new_board = Board.new(@width, @height)
+        new_board.board = @board.clone
+        return new_board
+    end
 
     Contract ArrayOf[HashOf[[Nat, Nat], String]] => Bool
 	def analyze(pattern_array)
