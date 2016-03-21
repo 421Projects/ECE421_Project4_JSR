@@ -88,7 +88,7 @@ class Board
 	def set_piece(column, piece)
         raise OutOfBounds unless column <= @width
 
-        row = 1
+        row = 0
         while @board[[row,column]] != "*"
             row += 1
         end
@@ -102,7 +102,7 @@ class Board
         return nil
 	end
 
-    #Contract Contracts::Nat,Contracts::Nat => String
+    Contract Nat, Nat => String
 	def get_player_on_pos(row, col)
 		return @board[[row, col]]
 	end
