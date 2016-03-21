@@ -13,19 +13,19 @@ class Player
 
     invariant(@piece) {@piece == @original_piece}
 
-    Contract String, ArrayOf[HashOf[[Nat, Nat], String]] => Any
+#    Contract String, ArrayOf[HashOf[[Nat, Nat], String]], Maybe[String] => Any
     def initialize(piece, patterns, name=piece+":Player")
         @original_piece = piece
         @piece = @original_piece
         @name = name
         @pattern_array = patterns
         @won = false
+        nil
     end
 
     Contract Bool => nil
     def won?(win_status)
         if win_status != @won
-            puts "notified"
             changed
             notify_observers(self)
             @won = win_status

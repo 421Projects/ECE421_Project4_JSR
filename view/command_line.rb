@@ -79,8 +79,8 @@ class CommandLineView
     def pretty_print(board)
         puts board.board
         board_pic = ""
-        for r in board.height.downto(1)
-            for c in 1..board.width
+        for r in (board.height-1).downto(0)
+            for c in 0..(board.width-1)
                 # board_pic += "(#{r},#{c})[#{board.get_player_on_pos(r,c).piece}], "
                 board_pic += "[#{board.board[[r,c]]}], "
             end

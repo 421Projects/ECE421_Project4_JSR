@@ -36,7 +36,7 @@ class CMDController
             names = [@game.p1_piece, @game.p2_piece]
             for i in 1..@AI_players
                 puts "creating ai"
-                ai = AIPlayer.new(@game.p1_piece, @game.p1_patterns, @game.p2_piece, @game.p2_patterns)
+                ai = AIPlayer.new(names.pop, patterns.pop, names[0], patterns[0])
                 for obj in @observer_views
                     ai.add_observer(obj)
                 end
