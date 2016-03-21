@@ -56,4 +56,5 @@ observable
 http://ruby-doc.org/stdlib-1.9.3/libdoc/observer/rdoc/Observable.html
 http://stackoverflow.com/questions/11402244/observer-observable-objects-with-mvc-pattern
 
-
+ruby super
+http://stackoverflow.com/questions/18448831/calling-method-in-parent-class-from-subclass-methods-in-ruby
