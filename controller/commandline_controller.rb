@@ -75,7 +75,7 @@ class CMDController
 
         p = @player_playing
         w = @board.analyze(@player_playing.pattern_array)
-        @player_playing.won?(w)
+        @player_playing.set_win_status(w)
         puts "#{p.to_s} won status is #{p.won}"
         if w # game over, no need to switch turns
             return
