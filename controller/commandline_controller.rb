@@ -52,6 +52,9 @@ class CMDController
                 @players.push(re)
             end
             @board = Board.new(@game.board_width, @game.board_height)
+            for obj in @observer_views
+                @board.add_observer(obj)
+            end
             @player_playing = @players.shuffle[0]
             if @player_playing.is_a? AIPlayer
                 self.take_turn(0)
@@ -73,22 +76,19 @@ class CMDController
             @board.set_piece(arg, @player_playing.piece)
         end
 
-        p = @player_playing
-        w = @board.analyze(@player_playing.pattern_array)
-        @player_playing.set_win_status(w)
-        puts "#{p.to_s} won status is #{p.won}"
-        if w # game over, no need to switch turns
-            return
+        if @board.analyze(@player_playing.pattern_array)
+            # game over, no need to switch turns
+            @player_playing.set_win_status(true)
+        else # switch turns
+            @player_playing = @players[@players.index(@player_playing)+1]
+            if @player_playing == nil
+                @player_playing = @players[0]
+            end
+            if @player_playing.is_a? AIPlayer
+                self.take_turn(0)
+            end
         end
-        # switch turns
-        @player_playing = @players[@players.index(@player_playing)+1]
-        if @player_playing == nil
-            @player_playing = @players[0]
-        end
-        if @player_playing.is_a? AIPlayer
-            self.take_turn(0)
-        end
-        return nil
+        nil
     end
 
     def self.get_board()
@@ -113,7 +113,6 @@ class CMDController
         elsif commands[0].downcase.include? "restart" or
           commands[0].downcase.include? "reset"
             @players = []
-            puts "POOOOOOOOOOOOOOOOOOOOP"
             @board = nil
             @player_playing = nil
         elsif i != nil

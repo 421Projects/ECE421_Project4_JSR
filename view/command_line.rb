@@ -42,13 +42,19 @@ class CommandLineView
         return gets.chomp.split
     end
 
-    def update(player)
-        puts "#{player.to_s} has won!"
-        # self.pretty_print(eval("CMDController.get_board"))
-        self.pretty_print(CMDController.get_board)
-        #eval("CMDController.handle_event(['reset'])")
-        CMDController.handle_event(['reset'])
-        @game_started = false
+    def update(arg)
+        if arg.is_a? Player
+            puts "#{arg.to_s} has won!"
+            # self.pretty_print(eval("CMDController.get_board"))
+            self.pretty_print(CMDController.get_board)
+            #eval("CMDController.handle_event(['reset'])")
+            CMDController.handle_event(['reset'])
+            @game_started = false
+        elsif arg.is_a? Board
+            self.pretty_print(arg)
+        else
+            puts "#{arg} not recognized."
+        end
     end
 
     def parse_command(user_input)
@@ -70,9 +76,6 @@ class CommandLineView
             end
             CMDController.handle_event(user_input)
             #eval("CMDController.handle_event(#{user_input})")
-        end
-        if @game_started
-            self.pretty_print(eval("CMDController.get_board"))
         end
     end
 
