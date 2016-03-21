@@ -399,7 +399,7 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         b = Board.new(game.board_height, game.board_width)
 
-        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_patterns)
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns)
 
         b.set_piece(0, game.p1_piece)
         assert_equal(3, p1.score_of_board(b))
@@ -413,7 +413,7 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         b = Board.new(game.board_height, game.board_width)
 
-        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_patterns)
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns)
 
         pattern1 = {}
         pattern1[[0, 0]] = game.p1_piece
@@ -441,8 +441,8 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         game = Connect4.new()
 
-        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_patterns)
-        p2 = AIPlayer.new(game.p2_piece, game.p2_patterns, game.p1_patterns)
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns)
+        p2 = AIPlayer.new(game.p2_piece, game.p2_patterns, game.p1_piece, game.p1_patterns)
 
         b = Board.new(game.board_height, game.board_width)
         assert_equal(b.piece_count, 0)

@@ -7,12 +7,13 @@ class AIPlayer < Player
     include Contracts::Builtin
     include Contracts::Invariants
 
-    Contract String, ArrayOf[HashOf[[Nat, Nat], String]], ArrayOf[HashOf[[Nat, Nat], String]] => Any
-    def initialize(piece, patterns, opposing_patterns, depth = 3, name=piece+":Player")
+    Contract String, ArrayOf[HashOf[[Nat, Nat], String]], String, ArrayOf[HashOf[[Nat, Nat], String]] => Any
+    def initialize(piece, patterns, opposing_piece, opposing_patterns, depth = 3, name=piece+":Player")
         @original_piece = piece
         @piece = @original_piece
         @name = name
         @pattern_array = patterns
+        @opposing_piece = opposing_piece
         @opposing_patterns = opposing_patterns
         @depth = depth
     end
