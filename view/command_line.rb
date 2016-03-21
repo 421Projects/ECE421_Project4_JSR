@@ -69,10 +69,6 @@ class CommandLineView
                 puts "how many AIs?"
                 count = gets.chomp
                 user_input << count
-                #eval("CMDController.handle_event(['ai',#{count}])")
-            elsif user_input[0].downcase.include? "reset" or
-                 user_input[0].downcase.include? "restart"
-                @game_started = false
             end
             begin
                 CMDController.handle_event(user_input)
@@ -82,6 +78,8 @@ class CommandLineView
             rescue CMDController::CommandNotSupported => cns
                 puts cns.message
                 return
+            rescue NameError => ne
+                puts ne.message
             end
             #eval("CMDController.handle_event(#{user_input})")
         end

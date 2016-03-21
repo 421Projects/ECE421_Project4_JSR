@@ -119,31 +119,39 @@ class CMDController
     end
 
     def self.handle_event(commands)
-        i = Integer(commands[0]) rescue nil
-        if commands[0].downcase.include? "new" or
-          commands[0].downcase.include? "create"
-            ai_count = Integer(commands[2]) rescue nil
-            if commands[1].downcase.include? "conn"
-                self.create_game("Connect4", ai_count)
-            elsif commands[1].downcase.include? "otto"
-                self.create_game("OttoToot", ai_count)
+        case commands
+        when Array
+            if commands[0].respond_to?("to_i") and
+              commands[0].to_i.to_s == commands[0] and
+              @game_started
+                self.take_turn(Integer(commands[0]))
+            elsif commands[0].respond_to?("downcase")
+                if commands[0].downcase.include? "new" or
+                  commands[0].downcase.include? "create"
+                    ai_count = Integer(commands[2]) rescue nil
+                    begin
+                        gameClazz = Object.const_get(commands[1]) # GameMode
+                    rescue NameError => ne
+                        raise ne, "#{commands[1]} mode not found."
+                    end
+                    if gameClazz.superclass == GameMode
+                        self.create_game(commands[1], ai_count)
+                    else
+                        raise ModeNotSupported,"#{commands[1]} mode not supported."
+                    end
+                elsif commands[0].downcase.include? "restart" or
+                     commands[0].downcase.include? "reset"
+                    @players = []
+                    @board = nil
+                    @player_playing = nil
+                    @game_started = false
+                end
             else
-                raise ModeNotSupported, "#{commands[1]} mode not supported."
+                raise CommandNotSupported, "#{commands} not supported."
             end
-        elsif commands[0].downcase.include? "ai"
-            self.set_AIs(Integer(commands[1]))
-        elsif commands[0].downcase.include? "restart" or
-             commands[0].downcase.include? "reset"
-            @players = []
-            @board = nil
-            @player_playing = nil
-            @game_started = false
-        elsif i != nil
-            self.take_turn(i)
         else
             raise CommandNotSupported, "#{commands} not supported."
         end
-
     end
 
     #Contract Contracts::Nat => Player
