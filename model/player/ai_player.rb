@@ -8,7 +8,7 @@ class AIPlayer < Player
     include Contracts::Invariants
 
     Contract String, ArrayOf[HashOf[[Nat, Nat], String]], String, ArrayOf[HashOf[[Nat, Nat], String]], Maybe[Nat], Maybe[String] => Any
-    def initialize(piece, patterns, opposing_piece, opposing_patterns, depth = 3, name=piece+":Player")
+    def initialize(piece, patterns, opposing_piece, opposing_patterns, depth = 2, name=piece+":Player")
         super(piece, patterns, name)
         @original_piece = piece
         @piece = @original_piece
@@ -22,7 +22,6 @@ class AIPlayer < Player
     Contract Board => nil
     def play(board_to_play)
         place = maximize(board_to_play, @depth)[1]
-        puts "Playing @#{place}"
         board_to_play.set_piece(place, @piece)
         nil
     end
@@ -43,17 +42,15 @@ class AIPlayer < Player
 
             if depth <= 0
                 score = score_of_board(new_board, @pattern_array) - score_of_board(new_board, @opposing_patterns) 
-                #puts "LEAF: Score is #{score} @#{index}"
                 if score < best_value
                     best_value = score
                     best_index = index
                 end
             else
                 score = minimize(new_board, depth)
-                #puts "BRANCH: Score is #{score} @#{index}"
                 if score[0] < best_value
                     best_value = score[0]
-                    best_index = score[1]
+                    best_index = index
                 end
             end            
         end
@@ -77,17 +74,15 @@ class AIPlayer < Player
 
             if depth <= 0
                 score = score_of_board(new_board, @pattern_array) - score_of_board(new_board, @opposing_patterns) 
-                #puts "LEAF: Score is #{score} @#{index}"
                 if score > best_value
                     best_value = score
                     best_index = index
                 end
             else
                 score = minimize(new_board, depth)
-                #puts "BRANCH: Score is #{score} @#{index}"
                 if score[0] > best_value
                     best_value = score[0]
-                    best_index = score[1]
+                    best_index = index
                 end
             end            
         end
