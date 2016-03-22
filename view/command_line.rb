@@ -64,7 +64,10 @@ class CommandLineView
         if user_input == nil or user_input[0] == nil
             return
         elsif user_input[0].downcase.include? "help"
-            puts " help: \n new: \n restart: \n"
+            puts " help: \n new: \n restart: \n modes: \n"
+        elsif user_input[0].downcase.include? "mode"
+            puts "Mode files loaded are:"
+            puts CMDController.get_mode_files_loaded
         else
             if user_input[0].downcase.include? "new" or
               user_input[0].downcase.include? "create"
