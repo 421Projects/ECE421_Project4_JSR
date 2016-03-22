@@ -21,7 +21,6 @@ class AIPlayer < Player
 
     def play(board_to_play)
         place = maximize(board_to_play, @depth)[1]
-        puts "Playing @#{place}"
         board_to_play.set_piece(place, @piece)
     end
 
@@ -41,17 +40,15 @@ class AIPlayer < Player
 
             if depth <= 0
                 score = score_of_board(new_board, @pattern_array) - score_of_board(new_board, @opposing_patterns) 
-                #puts "LEAF: Score is #{score} @#{index}"
                 if score < best_value
                     best_value = score
                     best_index = index
                 end
             else
                 score = minimize(new_board, depth)
-                #puts "BRANCH: Score is #{score} @#{index}"
                 if score[0] < best_value
                     best_value = score[0]
-                    best_index = score[1]
+                    best_index = index
                 end
             end            
         end
@@ -75,17 +72,15 @@ class AIPlayer < Player
 
             if depth <= 0
                 score = score_of_board(new_board, @pattern_array) - score_of_board(new_board, @opposing_patterns) 
-                #puts "LEAF: Score is #{score} @#{index}"
                 if score > best_value
                     best_value = score
                     best_index = index
                 end
             else
                 score = minimize(new_board, depth)
-                #puts "BRANCH: Score is #{score} @#{index}"
                 if score[0] > best_value
                     best_value = score[0]
-                    best_index = score[1]
+                    best_index = index
                 end
             end            
         end

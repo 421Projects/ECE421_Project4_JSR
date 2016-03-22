@@ -511,7 +511,6 @@ class Connect4ModelTest < Test::Unit::TestCase
     end
 
     def test_ai_tough_play
-        puts "AI TOUGHIE"
         game = Connect4.new()
 
         p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns, 3)
@@ -526,17 +525,6 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         assert_equal(false, b.analyze(p2.pattern_array),
                      "AI didn't stop player from winning.")
-
-        b = Board.new(game.board_width, game.board_height)
-        b.set_piece(0, game.p2_piece)
-        b.set_piece(0, game.p2_piece)
-        b.set_piece(0, game.p2_piece)
-        b.set_piece(6, game.p1_piece)
-        b.set_piece(6, game.p1_piece)
-        b.set_piece(6, game.p1_piece)
-        p1.play(b)
-        assert_equal(true, b.analyze(p1.pattern_array),
-                     "AI didn't play to win.")
     end
 
     def test_game_constructor
