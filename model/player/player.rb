@@ -24,7 +24,7 @@ class Player
     end
 
     Contract Bool => nil
-    def won?(win_status)
+    def set_win_status(win_status)
         if win_status != @won
             changed
             notify_observers(self)

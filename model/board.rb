@@ -3,6 +3,7 @@ require 'observer'
 require_relative 'player/player'
 class Board
 
+    include Observable
     class ColumnFullError < Exception
     end
     class OutOfBounds < Exception
@@ -97,6 +98,8 @@ class Board
         else
             @board[[row,column]] = piece
             @piece_count += 1
+            changed
+            notify_observers(self)
         end
 
         return nil

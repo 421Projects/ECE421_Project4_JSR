@@ -23,10 +23,12 @@ class CommandLineView
     Contract None => nil
     def start_game()
         CMDController.initialize([self])
+        puts "Mode files loaded are:"
+        puts CMDController.get_mode_files_loaded
         @running = true
 
-        while (@running)
-            if @game_started
+        while (running)
+            if CMDController.game_started?
                 puts "#{eval('CMDController.get_player_playing.to_s')} Next Piece?> "
             else
                 puts "Prompt> "
@@ -42,13 +44,19 @@ class CommandLineView
         return gets.chomp.split
     end
 
-    def update(player)
-        puts "#{player.to_s} has won!"
-        # self.pretty_print(eval("CMDController.get_board"))
-        self.pretty_print(CMDController.get_board)
-        #eval("CMDController.handle_event(['reset'])")
-        CMDController.handle_event(['reset'])
-        @game_started = false
+    def update(arg)
+        if arg.is_a? Player
+            puts "#{arg.to_s} has won!"
+            # self.pretty_print(eval("CMDController.get_board"))
+            self.pretty_print(CMDController.get_board)
+            #eval("CMDController.handle_event(['reset'])")
+            CMDController.handle_event(['reset'])
+            @game_started = false
+        elsif arg.is_a? Board
+            self.pretty_print(arg)
+        else
+            puts "#{arg} not recognized."
+        end
     end
 
     def parse_command(user_input)
@@ -56,23 +64,29 @@ class CommandLineView
         if user_input == nil or user_input[0] == nil
             return
         elsif user_input[0].downcase.include? "help"
-            puts " help: \n new: \n restart: \n"
+            puts " help: \n new: \n restart: \n modes: \n"
+        elsif user_input[0].downcase.include? "mode"
+            puts "Mode files loaded are:"
+            puts CMDController.get_mode_files_loaded
         else
             if user_input[0].downcase.include? "new" or
               user_input[0].downcase.include? "create"
                 puts "how many AIs?"
                 count = gets.chomp
-                eval("CMDController.handle_event(['ai',#{count}])")
-                @game_started = true
-            elsif user_input[0].downcase.include? "reset" or
-                 user_input[0].downcase.include? "restart"
-                @game_started = false
+                user_input << count
             end
-            CMDController.handle_event(user_input)
+            begin
+                CMDController.handle_event(user_input)
+            rescue CMDController::ModeNotSupported => mns
+                puts mns.message
+                return
+            rescue CMDController::CommandNotSupported => cns
+                puts cns.message
+                return
+            rescue NameError => ne
+                puts ne.message
+            end
             #eval("CMDController.handle_event(#{user_input})")
-        end
-        if @game_started
-            self.pretty_print(eval("CMDController.get_board"))
         end
     end
 

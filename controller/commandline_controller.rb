@@ -2,7 +2,6 @@ require_relative "../model/board"
 require_relative "../model/player/ai_player"
 require_relative "../model/player/real_player"
 require_relative "../model/game/game"
-require_relative "../model/game/connect4"
 require 'contracts'
 require 'observer'
 
@@ -12,10 +11,28 @@ class CMDController
     include Contracts::Builtin
     include Contracts::Invariants
 
+    class CommandNotSupported < Exception
+    end
+    class ModeNotSupported < Exception
+    end
+
+    attr_reader :game_started
+
     #Contract None => Any
     def self.initialize(observer_views)
-        Dir["../model/game/*"].each {|file| require_relative file }
+        original_dir = Dir.pwd
+        Dir.chdir(__dir__)
 
+        classes_before = ObjectSpace.each_object(Class).to_a
+        Dir["../model/game/*"].each {|file|
+            require_relative file
+        }
+        Dir.chdir(original_dir)
+
+        classes_after = ObjectSpace.each_object(Class).to_a
+        @modes_loaded = classes_after - classes_before
+
+        @game_started = false
         @observer_views = observer_views.to_a
         @players = []
         @board = nil
@@ -23,20 +40,35 @@ class CMDController
         @AI_players = 0
     end
 
+    def self.get_mode_files_loaded
+        @modes_loaded
+    end
+
     def self.get_player_playing
         return @player_playing
     end
 
+    def self.game_started?
+        @game_started
+    end
+
     #Contract String => GameMode
-    def self.create_game(game)
+    def self.create_game(game, ai_players=0)
+        if ai_players.is_a? Numeric
+            @AI_players = ai_players
+        else
+            @AI_players = 0
+        end
         gameClazz = Object.const_get(game) # GameMode
         if gameClazz.superclass == GameMode
             @game = gameClazz.new()
+            @game_started = true
             patterns = [@game.p1_patterns, @game.p2_patterns]
             names = [@game.p1_piece, @game.p2_piece]
-            for i in 1..@AI_players
+            for i in 0..(@AI_players-1)
                 puts "creating ai"
-                ai = AIPlayer.new(names.pop, patterns.pop, names[0], patterns[0])
+                ai = AIPlayer.new(names[i], patterns[i],
+                                  names[i+1] || names[0], patterns[i+1] || patterns[0])
                 for obj in @observer_views
                     ai.add_observer(obj)
                 end
@@ -52,6 +84,9 @@ class CMDController
                 @players.push(re)
             end
             @board = Board.new(@game.board_width, @game.board_height)
+            for obj in @observer_views
+                @board.add_observer(obj)
+            end
             @player_playing = @players.shuffle[0]
             if @player_playing.is_a? AIPlayer
                 self.take_turn(0)
@@ -73,22 +108,19 @@ class CMDController
             @board.set_piece(arg, @player_playing.piece)
         end
 
-        p = @player_playing
-        w = @board.analyze(@player_playing.pattern_array)
-        @player_playing.won?(w)
-        puts "#{p.to_s} won status is #{p.won}"
-        if w # game over, no need to switch turns
-            return
+        if @board.analyze(@player_playing.pattern_array)
+            # game over, no need to switch turns
+            @player_playing.set_win_status(true)
+        else # switch turns
+            @player_playing = @players[@players.index(@player_playing)+1]
+            if @player_playing == nil
+                @player_playing = @players[0]
+            end
+            if @player_playing.is_a? AIPlayer
+                self.take_turn(0)
+            end
         end
-        # switch turns
-        @player_playing = @players[@players.index(@player_playing)+1]
-        if @player_playing == nil
-            @player_playing = @players[0]
-        end
-        if @player_playing.is_a? AIPlayer
-            self.take_turn(0)
-        end
-        return nil
+        nil
     end
 
     def self.get_board()
@@ -100,28 +132,39 @@ class CMDController
     end
 
     def self.handle_event(commands)
-        i = Integer(commands[0]) rescue nil
-        if commands[0].downcase.include? "new" or
-          commands[0].downcase.include? "create"
-            if commands[1].downcase.include? "conn"
-                self.create_game("Connect4")
-            elsif commands[1].downcase.include? "otto"
-                self.create_game("OttoToot")
+        case commands
+        when Array
+            if commands[0].respond_to?("to_i") and
+              commands[0].to_i.to_s == commands[0] and
+              @game_started
+                self.take_turn(Integer(commands[0]))
+            elsif commands[0].respond_to?("downcase")
+                if commands[0].downcase.include? "new" or
+                  commands[0].downcase.include? "create"
+                    ai_count = Integer(commands[2]) rescue nil
+                    begin
+                        gameClazz = Object.const_get(commands[1]) # GameMode
+                    rescue NameError => ne
+                        raise ne, "#{commands[1]} mode not found."
+                    end
+                    if gameClazz.superclass == GameMode
+                        self.create_game(commands[1], ai_count)
+                    else
+                        raise ModeNotSupported,"#{commands[1]} mode not supported."
+                    end
+                elsif commands[0].downcase.include? "restart" or
+                     commands[0].downcase.include? "reset"
+                    @players = []
+                    @board = nil
+                    @player_playing = nil
+                    @game_started = false
+                end
+            else
+                raise CommandNotSupported, "#{commands} not supported."
             end
-        elsif commands[0].downcase.include? "ai"
-            self.set_AIs(Integer(commands[1]))
-        elsif commands[0].downcase.include? "restart" or
-          commands[0].downcase.include? "reset"
-            @players = []
-            puts "POOOOOOOOOOOOOOOOOOOOP"
-            @board = nil
-            @player_playing = nil
-        elsif i != nil
-            self.take_turn(i)
         else
-            puts "#{commands} not recognized."
+            raise CommandNotSupported, "#{commands} not supported."
         end
-
     end
 
     #Contract Contracts::Nat => Player
@@ -135,4 +178,3 @@ class CMDController
     end
 
 end
-
