@@ -55,8 +55,6 @@ class CommandLineView
     def update(arg)
         if arg.is_a? Player
             puts "#{arg.to_s} has won!"
-            # self.pretty_print(eval("CMDController.get_board"))
-            self.pretty_print(CMDController.get_board)
             #eval("CMDController.handle_event(['reset'])")
             CMDController.handle_event(['reset'])
             @game_started = false
