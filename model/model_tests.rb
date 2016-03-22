@@ -394,24 +394,63 @@ class Connect4ModelTest < Test::Unit::TestCase
                      "Wrongly calculated the game to be won.")
     end
 
+    def test_ai_score_of_pattern
+        game = Connect4.new()
+
+        b = Board.new(game.board_width, game.board_height)
+
+        pattern = {}
+        pattern[[0, 0]] = game.p1_piece
+        pattern[[0, 1]] = game.p1_piece
+        pattern[[0, 2]] = game.p1_piece
+        pattern[[0, 3]] = game.p1_piece
+
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns)
+
+        b.set_piece(3, game.p1_piece)
+        assert_equal(4, p1.score_of_pattern(pattern, b))
+
+        b.set_piece(2, game.p1_piece)
+        assert_equal(31, p1.score_of_pattern(pattern, b))
+    end
+
     def test_ai_score_of_board
         game = Connect4.new()
 
-        b = Board.new(game.board_height, game.board_width)
+        b = Board.new(game.board_width, game.board_height)
 
         p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns)
 
         b.set_piece(0, game.p1_piece)
-        assert_equal(3, p1.score_of_board(b))
+        assert_equal(3, p1.score_of_board(b, game.p1_patterns))
 
         b.set_piece(0, game.p1_piece)
-        assert_equal(15, p1.score_of_board(b))
+        assert_equal(15, p1.score_of_board(b, game.p1_patterns))
+
+        b.set_piece(0, game.p1_piece)
+        assert_equal(117, p1.score_of_board(b, game.p1_patterns)) # (100+10+1) + (1+1+1) + (1+1+1) + 0
+
+        b.set_piece(0, game.p1_piece)
+        assert_equal(1118, p1.score_of_board(b, game.p1_patterns)) # (1000+100+10+1) + (1+1+1+1) + (1+1+1+1) + (1)
+
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(3, game.p1_piece)
+        assert_equal(7, p1.score_of_board(b, game.p1_patterns)) # (1) + (1+1+1+1) + (1) + (1)
+
+        b.set_piece(3, game.p1_piece)
+        assert_equal(25, p1.score_of_board(b, game.p1_patterns)) # (10 + 1) + (1+1+1+1 + 1+1+1+1) + (1+1+1) + (1+1+1)
+
+        b.set_piece(3, game.p1_piece)
+        assert_equal(135, p1.score_of_board(b, game.p1_patterns)) # (100+10+1) + (1+1+1+1 + 1+1+1+1 + 1+1+1+1) + (1+1+1+1+1) + (1+1+1+1+1)
+
+        b.set_piece(3, game.p1_piece)
+        assert_equal(1144, p1.score_of_board(b, game.p1_patterns)) # (1000+100+10+1) + (1+1+1+1 + 1+1+1+1 + 1+1+1+1 + 1+1+1+1) + (1+1+1+1) + (1+1+1+1)
     end
 
     def test_ai_heuristic
         game = Connect4.new()
 
-        b = Board.new(game.board_height, game.board_width)
+        b = Board.new(game.board_width, game.board_height)
 
         p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns)
 
@@ -435,16 +474,23 @@ class Connect4ModelTest < Test::Unit::TestCase
         b.set_piece(0, game.p1_piece)
         assert_equal(1, p1.heuristic(pattern1, b, 0, 0))
         assert_equal(10, p1.heuristic(pattern2, b, 0, 0))
+
+        b.set_piece(0, game.p1_piece)
+        assert_equal(1, p1.heuristic(pattern1, b, 0, 0))
+        assert_equal(100, p1.heuristic(pattern2, b, 0, 0))
+
+        b.set_piece(0, game.p1_piece)
+        assert_equal(1, p1.heuristic(pattern1, b, 0, 0))
+        assert_equal(1000, p1.heuristic(pattern2, b, 0, 0))
     end
 
     def test_ai_basic_play
 
         game = Connect4.new()
 
-        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns)
-        p2 = AIPlayer.new(game.p2_piece, game.p2_patterns, game.p1_piece, game.p1_patterns)
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns, 1)
 
-        b = Board.new(game.board_height, game.board_width)
+        b = Board.new(game.board_width, game.board_height)
         assert_equal(b.piece_count, 0)
 
         p1.play(b)
@@ -461,29 +507,36 @@ class Connect4ModelTest < Test::Unit::TestCase
 
         assert_equal(b.analyze(p1.pattern_array), true,
                      "Didn't detect win.")
-        assert_equal(b.analyze(p2.pattern_array), false,
-                     "Wrongly calculated the game to be won.")
 
-        b = Board.new(game.board_height, game.board_width)
-        assert_equal(b.piece_count, 0)
+    end
 
-        p2.play(b)
-        assert_equal(b.piece_count, 1)
+    def test_ai_tough_play
+        puts "AI TOUGHIE"
+        game = Connect4.new()
 
-        p2.play(b)
-        assert_equal(b.piece_count, 2)
+        p1 = AIPlayer.new(game.p1_piece, game.p1_patterns, game.p2_piece, game.p2_patterns, 3)
+        p2 = AIPlayer.new(game.p2_piece, game.p2_patterns, game.p1_piece, game.p1_patterns, 3)
 
-        p2.play(b)
-        assert_equal(b.piece_count, 3)
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(3, game.p2_piece)
+        b.set_piece(3, game.p2_piece)
+        b.set_piece(3, game.p2_piece)
+        p1.play(b)
+        b.set_piece(3, game.p2_piece)
 
-        p2.play(b)
-        assert_equal(b.piece_count, 4)
+        assert_equal(false, b.analyze(p2.pattern_array),
+                     "AI didn't stop player from winning.")
 
-        assert_equal(b.analyze(p2.pattern_array), true,
-                     "Didn't detect win.")
-        assert_equal(b.analyze(p1.pattern_array), false,
-                     "Wrongly calculated the game to be won.")
-
+        b = Board.new(game.board_width, game.board_height)
+        b.set_piece(0, game.p2_piece)
+        b.set_piece(0, game.p2_piece)
+        b.set_piece(0, game.p2_piece)
+        b.set_piece(6, game.p1_piece)
+        b.set_piece(6, game.p1_piece)
+        b.set_piece(6, game.p1_piece)
+        p1.play(b)
+        assert_equal(true, b.analyze(p1.pattern_array),
+                     "AI didn't play to win.")
     end
 
     def test_game_constructor

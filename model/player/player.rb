@@ -13,7 +13,7 @@ class Player
 
     invariant(@piece) {@piece == @original_piece}
 
-#    Contract String, ArrayOf[HashOf[[Nat, Nat], String]], Maybe[String] => Any
+    Contract String, ArrayOf[HashOf[[Nat, Nat], String]], Maybe[String] => Any
     def initialize(piece, patterns, name=piece+":Player")
         @original_piece = piece
         @piece = @original_piece
