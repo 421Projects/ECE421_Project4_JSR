@@ -8,7 +8,7 @@ class AIPlayer < Player
     include Contracts::Invariants
 
     Contract String, ArrayOf[HashOf[[Nat, Nat], String]], String, ArrayOf[HashOf[[Nat, Nat], String]], Maybe[Nat], Maybe[String] => Any
-    def initialize(piece, patterns, opposing_piece, opposing_patterns, depth = 3, name=piece+":Player")
+    def initialize(piece, patterns, opposing_piece, opposing_patterns, depth = 2, name=piece+":Player")
         super(piece, patterns, name)
         @original_piece = piece
         @piece = @original_piece
