@@ -3,9 +3,11 @@ require_relative "./game"
 class OttoToot < GameMode
 
     def initialize()
+        @ai_compatible = false
         @num_of_players = 2
         @p1_piece = "O"
         @p2_piece = "T"
+        @pieces = [@p1_piece, @p2_piece]
 
         @board_width = 7
         @board_height = 6
@@ -80,6 +82,10 @@ class OttoToot < GameMode
         pattern[[1, 2]] = @p1_piece
         pattern[[0, 3]] = @p2_piece
         @p2_patterns << pattern
+        @patterns = [
+            @p1_patterns,
+            @p2_patterns
+        ]
 
     end
     

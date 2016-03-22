@@ -54,7 +54,7 @@ class CommandLineView
         return gets.chomp.split
     end
 
-    Contract Or[Player, Board] => nil
+    Contract Or[Player, Board, GameMode] => nil
     def update(arg)
         if arg.is_a? Player
             puts "#{arg.to_s} has won!"
@@ -63,6 +63,9 @@ class CommandLineView
             @game_started = false
         elsif arg.is_a? Board
             self.pretty_print(arg)
+        elsif arg.is_a? GameMode
+            puts "#{arg} is not AI compatible.\n" +
+                 "Creating all players as human players."
         else
             puts "#{arg} not recognized."
         end

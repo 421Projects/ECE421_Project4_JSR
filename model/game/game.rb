@@ -14,7 +14,8 @@ class GameMode
     attr_reader :p1_patterns
     attr_reader :p2_patterns
     attr_reader :num_of_players
-
+    attr_reader :pieces, :patterns
+    attr_reader :ai_compatible
     Contract None => Any
     def initialize()
         raise NotImplementedError, "Objects that extend GameMode must provide their own constructor."

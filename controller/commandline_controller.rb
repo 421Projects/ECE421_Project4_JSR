@@ -7,6 +7,7 @@ require 'observer'
 
 class CMDController
 
+    include Observable
     include Contracts::Core
     include Contracts::Builtin
     include Contracts::Invariants
@@ -67,6 +68,10 @@ class CMDController
 
     Contract String, Maybe[Integer] => GameMode
     def self.create_game(game, ai_players=0)
+        c = self.new
+        for obj in @observer_views
+            c.add_observer(obj)
+        end
         if ai_players.is_a? Numeric
             @AI_players = ai_players
         else
@@ -76,22 +81,27 @@ class CMDController
         if gameClazz.superclass == GameMode
             @game = gameClazz.new()
             @game_started = true
-            patterns = [@game.p1_patterns, @game.p2_patterns]
-            names = [@game.p1_piece, @game.p2_piece]
-            for i in 0..(@AI_players-1)
-                if @players.size < @game.num_of_players
-                    puts "creating ai"
-                    ai = AIPlayer.new(names[i], patterns[i],
-                                      names[i+1] || names[0], patterns[i+1] || patterns[0])
-                    for obj in @observer_views
-                        ai.add_observer(obj)
+            #patterns = [@game.p1_patterns, @game.p2_patterns]
+            #names = [@game.p1_piece, @game.p2_piece]
+            patterns = @game.patterns
+            names = @game.pieces
+            if @game.ai_compatible
+                for i in 0..(@AI_players-1)
+                    if @players.size < @game.num_of_players
+                        ai = AIPlayer.new(names[i], patterns[i],
+                                          names[i+1] || names[0], patterns[i+1] || patterns[0])
+                        for obj in @observer_views
+                            ai.add_observer(obj)
+                        end
+                        @players.push(ai)
                     end
-                    @players.push(ai)
                 end
+            else
+                c.changed
+                c.notify_observers(@game)
             end
 
             while @players.size < @game.num_of_players#2 # number of players
-                puts "creating real"
                 re = RealPlayer.new(names.pop, patterns.pop)
                 for obj in @observer_views
                     re.add_observer(obj)
