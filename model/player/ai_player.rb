@@ -19,10 +19,12 @@ class AIPlayer < Player
         @depth = depth
     end
 
+    Contract Board => nil
     def play(board_to_play)
         place = maximize(board_to_play, @depth)[1]
         puts "Playing @#{place}"
         board_to_play.set_piece(place, @piece)
+        nil
     end
 
     Contract Board, Nat => ArrayOf[Integer]
