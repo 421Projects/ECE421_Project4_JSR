@@ -8,14 +8,8 @@ class CommandLineView
     include Contracts::Builtin
     include Contracts::Invariants
 
-    @@commands = ["new", "print", "place", "quit"]
-
-    attr_accessor :game_started, :running
-
     Contract None => nil
     def initialize()
-        @game_started = false
-        @game_finished = false
         @running = true
         return nil
     end
@@ -26,7 +20,7 @@ class CommandLineView
         puts "Mode files loaded are:"
         puts CMDController.get_mode_files_loaded
 
-        while (running)
+        while (@running)
             if CMDController.game_started?
                 if CMDController.human_player_playing?
                     puts "#{eval('CMDController.get_player_playings_name')} Next Piece?> "
@@ -60,7 +54,6 @@ class CommandLineView
             puts "#{arg.to_s} has won!"
             #eval("CMDController.handle_event(['reset'])")
             CMDController.handle_event(['reset'])
-            @game_started = false
         elsif arg.is_a? Board
             self.pretty_print(arg)
         elsif arg.is_a? GameMode
@@ -105,6 +98,7 @@ class CommandLineView
                 return
             rescue NameError => ne
                 puts ne.message
+                return
             end
             #eval("CMDController.handle_event(#{user_input})")
         end

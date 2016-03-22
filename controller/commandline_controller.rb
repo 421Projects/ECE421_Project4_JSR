@@ -85,11 +85,12 @@ class CMDController
             #names = [@game.p1_piece, @game.p2_piece]
             patterns = @game.patterns
             names = @game.pieces
-            if @game.ai_compatible
+            if @game.ai_compatible?
                 for i in 0..(@AI_players-1)
                     if @players.size < @game.num_of_players
                         ai = AIPlayer.new(names[i], patterns[i],
                                           names[i+1] || names[0], patterns[i+1] || patterns[0])
+                        @player_playing = ai
                         for obj in @observer_views
                             ai.add_observer(obj)
                         end
@@ -112,7 +113,10 @@ class CMDController
             for obj in @observer_views
                 @board.add_observer(obj)
             end
-            @player_playing = @players.shuffle[0]
+
+            if @player_playing == nil
+                @player_playing = @players.shuffle[0]
+            end
         # if @player_playing.is_a? AIPlayer
         #     self.take_turn(0)
         # end
