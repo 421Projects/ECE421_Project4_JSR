@@ -2,8 +2,11 @@ require_relative "./game"
 
 class Connect5_4P < GameMode
 
+    def ai_compatible?
+        return false
+    end
+
     def initialize()
-        @ai_compatible = false
         @num_of_players = 4
         @p1_piece = "B"
         @p2_piece = "R"

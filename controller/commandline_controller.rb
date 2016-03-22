@@ -85,7 +85,7 @@ class CMDController
             #names = [@game.p1_piece, @game.p2_piece]
             patterns = @game.patterns
             names = @game.pieces
-            if @game.ai_compatible
+            if @game.ai_compatible?
                 for i in 0..(@AI_players-1)
                     if @players.size < @game.num_of_players
                         ai = AIPlayer.new(names[i], patterns[i],
