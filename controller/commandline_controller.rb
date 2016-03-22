@@ -2,7 +2,6 @@ require_relative "../model/board"
 require_relative "../model/player/ai_player"
 require_relative "../model/player/real_player"
 require_relative "../model/game/game"
-require_relative "../model/game/connect4"
 require 'contracts'
 require 'observer'
 
@@ -21,7 +20,17 @@ class CMDController
 
     #Contract None => Any
     def self.initialize(observer_views)
-        Dir["../model/game/*"].each {|file| require_relative file }
+        original_dir = Dir.pwd
+        Dir.chdir(__dir__)
+
+        classes_before = ObjectSpace.each_object(Class).to_a
+        Dir["../model/game/*"].each {|file|
+            require_relative file
+        }
+        Dir.chdir(original_dir)
+
+        classes_after = ObjectSpace.each_object(Class).to_a
+        @modes_loaded = classes_after - classes_before
 
         @game_started = false
         @observer_views = observer_views.to_a
@@ -29,6 +38,10 @@ class CMDController
         @board = nil
         @player_playing = nil
         @AI_players = 0
+    end
+
+    def self.get_mode_files_loaded
+        @modes_loaded
     end
 
     def self.get_player_playing

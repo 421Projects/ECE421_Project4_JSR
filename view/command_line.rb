@@ -23,6 +23,8 @@ class CommandLineView
     Contract None => nil
     def start_game()
         CMDController.initialize([self])
+        puts "Mode files loaded are:"
+        puts CMDController.get_mode_files_loaded
         @running = true
 
         while (running)
