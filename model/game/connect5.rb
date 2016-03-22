@@ -1,6 +1,6 @@
 require_relative "./game"
 
-class Connect5_4P < GameMode
+class Connect5_4P < Game
 
     def ai_compatible?
         return false

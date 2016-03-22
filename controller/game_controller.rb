@@ -17,9 +17,9 @@ class GameController
         @players = []
     end
 
-    Contract String => GameMode
+    Contract String => Game
     def create_game(game)
-        gameClazz = Object.const_get(game) # GameMode
+        gameClazz = Object.const_get(game) # Game
         @game = gameClazz.new()
         return @game
     end

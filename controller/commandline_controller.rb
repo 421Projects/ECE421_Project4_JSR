@@ -66,7 +66,7 @@ class CMDController
         @game_started
     end
 
-    Contract String, Maybe[Integer] => GameMode
+    Contract String, Maybe[Integer] => Game
     def self.create_game(game, ai_players=0)
         c = self.new
         for obj in @observer_views
@@ -77,8 +77,8 @@ class CMDController
         else
             @AI_players = 0
         end
-        gameClazz = Object.const_get(game) # GameMode
-        if gameClazz.superclass == GameMode
+        gameClazz = Object.const_get(game) # Game
+        if gameClazz.superclass == Game
             @game = gameClazz.new()
             @game_started = true
             #patterns = [@game.p1_patterns, @game.p2_patterns]
@@ -172,11 +172,11 @@ class CMDController
                   commands[0].downcase.include? "create"
                     ai_count = Integer(commands[2]) rescue nil
                     begin
-                        gameClazz = Object.const_get(commands[1]) # GameMode
+                        gameClazz = Object.const_get(commands[1]) # Game
                     rescue NameError => ne
                         raise ne, "#{commands[1]} mode not found."
                     end
-                    if gameClazz.superclass == GameMode
+                    if gameClazz.superclass == Game
                         self.create_game(commands[1], ai_count)
                     else
                         raise ModeNotSupported,"#{commands[1]} mode not supported."

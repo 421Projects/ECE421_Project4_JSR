@@ -17,7 +17,6 @@ class App
         window.show()
         
         dialog = @builder.get_object("dialog1")
-        dialog.signal_connect("destroy") { Gtk.main_quit }
         dialog.show()
 
         image = Gtk::Image::new

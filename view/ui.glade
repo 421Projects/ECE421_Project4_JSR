@@ -113,30 +113,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
                   <object class="GtkButton" id="button10">
                     <property name="label" translatable="yes">button</property>
                     <property name="visible">True</property>
@@ -149,6 +125,12 @@
                     <property name="width">1</property>
                     <property name="height">1</property>
                   </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
               </object>
               <packing>
@@ -210,6 +192,7 @@
           <object class="GtkBox" id="box_labels">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel" id="label_game_mode">
                 <property name="visible">True</property>
@@ -250,6 +233,7 @@
           <object class="GtkGrid" id="grid_game_board">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="column_homogeneous">True</property>
             <child>
               <object class="GtkImage" id="image1">
                 <property name="visible">True</property>
@@ -809,6 +793,7 @@
           <object class="GtkGrid" id="grid1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="column_homogeneous">True</property>
             <child>
               <object class="GtkButton" id="button1">
                 <property name="label" translatable="yes">Place</property>

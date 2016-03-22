@@ -1,6 +1,6 @@
 require "contracts"
 
-class GameMode
+class Game
 
     include Contracts::Core
     include Contracts::Builtin
@@ -18,12 +18,18 @@ class GameMode
 
     Contract None => Any
     def initialize()
-        raise NotImplementedError, "Objects that extend GameMode must provide their own constructor."
+        raise NotImplementedError, "Objects that extend Game must provide their own constructor."
     end
 
     Contract None => Bool
     def ai_compatible?
         return true
     end
-
+    
+    Contract Contracts::Nat,Contracts::Nat => Any
+    def set_board_dimensions(board_width, board_height)
+        @board_width = board_width
+        @board_height = board_height
+    end
+    
 end

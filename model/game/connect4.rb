@@ -1,6 +1,6 @@
 require_relative "./game"
 
-class Connect4 < GameMode
+class Connect4 < Game
 
     def initialize()
         @num_of_players = 2
