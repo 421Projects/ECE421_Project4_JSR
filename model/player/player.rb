@@ -33,10 +33,12 @@ class Player
         nil
     end
 
+    Contract None => String
     def to_s
         return @name
     end
 
+    #Contract Board => Any
     def play(board_to_play)
         raise NotImplementedError, "Objects that extend Player must implement play."
     end

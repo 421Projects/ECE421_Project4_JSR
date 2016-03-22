@@ -19,7 +19,7 @@ class Board
     attr_reader :piece_count, :height, :width
     attr_accessor :board
 
-    #Contract Contracts::Nat,Contracts::Nat => Any
+    Contract Contracts::Nat,Contracts::Nat => Any
 	def initialize(width, height)
         @original_width = width
         @original_height = height
@@ -29,6 +29,7 @@ class Board
         @piece_count = 0
 	end
 
+    Contract None => Board
     def copy()
         new_board = Board.new(@width, @height)
         new_board.board = @board.clone
@@ -85,7 +86,7 @@ class Board
         return true
     end
 
-    #Contract Contracts::Nat, String  => nil
+    Contract Contracts::Nat, String => nil
 	def set_piece(column, piece)
         raise OutOfBounds unless column <= @width
 

@@ -8,8 +8,6 @@ class CommandLineView
     include Contracts::Builtin
     include Contracts::Invariants
 
-    @@commands = ["new", "print", "place", "quit"]
-
     attr_accessor :game_started, :running
 
     Contract None => nil
