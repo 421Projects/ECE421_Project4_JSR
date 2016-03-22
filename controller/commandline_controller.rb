@@ -7,6 +7,7 @@ require 'observer'
 
 class CMDController
 
+    include Observable
     include Contracts::Core
     include Contracts::Builtin
     include Contracts::Invariants
@@ -16,9 +17,9 @@ class CMDController
     class ModeNotSupported < Exception
     end
 
-    attr_reader :game_started
+    #attr_reader :game_started
 
-    #Contract None => Any
+    Contract ArrayOf[Object] => Any
     def self.initialize(observer_views)
         original_dir = Dir.pwd
         Dir.chdir(__dir__)
@@ -40,20 +41,37 @@ class CMDController
         @AI_players = 0
     end
 
+    Contract None => ArrayOf[Class]
     def self.get_mode_files_loaded
         @modes_loaded
     end
 
-    def self.get_player_playing
-        return @player_playing
+    Contract None => String
+    def self.get_player_playings_name
+        return @player_playing.to_s
     end
 
+    Contract None => Bool
+    def self.human_player_playing?
+        return @player_playing.is_a? RealPlayer
+    end
+
+    Contract None => Bool
+    def self.ai_player_playing?
+        return @player_playing.is_a? AIPlayer
+    end
+
+    Contract None => Bool
     def self.game_started?
         @game_started
     end
 
-    #Contract String => GameMode
+    Contract String, Maybe[Integer] => GameMode
     def self.create_game(game, ai_players=0)
+        c = self.new
+        for obj in @observer_views
+            c.add_observer(obj)
+        end
         if ai_players.is_a? Numeric
             @AI_players = ai_players
         else
@@ -63,20 +81,27 @@ class CMDController
         if gameClazz.superclass == GameMode
             @game = gameClazz.new()
             @game_started = true
-            patterns = [@game.p1_patterns, @game.p2_patterns]
-            names = [@game.p1_piece, @game.p2_piece]
-            for i in 0..(@AI_players-1)
-                puts "creating ai"
-                ai = AIPlayer.new(names[i], patterns[i],
-                                  names[i+1] || names[0], patterns[i+1] || patterns[0])
-                for obj in @observer_views
-                    ai.add_observer(obj)
+            #patterns = [@game.p1_patterns, @game.p2_patterns]
+            #names = [@game.p1_piece, @game.p2_piece]
+            patterns = @game.patterns
+            names = @game.pieces
+            if @game.ai_compatible
+                for i in 0..(@AI_players-1)
+                    if @players.size < @game.num_of_players
+                        ai = AIPlayer.new(names[i], patterns[i],
+                                          names[i+1] || names[0], patterns[i+1] || patterns[0])
+                        for obj in @observer_views
+                            ai.add_observer(obj)
+                        end
+                        @players.push(ai)
+                    end
                 end
-                @players.push(ai)
+            else
+                c.changed
+                c.notify_observers(@game)
             end
 
-            while @players.size < 2 # number of players
-                puts "creating real"
+            while @players.size < @game.num_of_players#2 # number of players
                 re = RealPlayer.new(names.pop, patterns.pop)
                 for obj in @observer_views
                     re.add_observer(obj)
@@ -88,9 +113,9 @@ class CMDController
                 @board.add_observer(obj)
             end
             @player_playing = @players.shuffle[0]
-            if @player_playing.is_a? AIPlayer
-                self.take_turn(0)
-            end
+        # if @player_playing.is_a? AIPlayer
+        #     self.take_turn(0)
+        # end
         else
             raise StandardError, "#{gameClazz} not a Game."
         end
@@ -116,9 +141,9 @@ class CMDController
             if @player_playing == nil
                 @player_playing = @players[0]
             end
-            if @player_playing.is_a? AIPlayer
-                self.take_turn(0)
-            end
+            # if @player_playing.is_a? AIPlayer
+            #     self.take_turn(0)
+            # end
         end
         nil
     end
@@ -158,6 +183,8 @@ class CMDController
                     @board = nil
                     @player_playing = nil
                     @game_started = false
+                elsif commands[0].downcase.include? "ai"
+                    self.take_turn(0)
                 end
             else
                 raise CommandNotSupported, "#{commands} not supported."

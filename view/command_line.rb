@@ -16,7 +16,7 @@ class CommandLineView
     def initialize()
         @game_started = false
         @game_finished = false
-        @running = false
+        @running = true
         return nil
     end
 
@@ -25,49 +25,69 @@ class CommandLineView
         CMDController.initialize([self])
         puts "Mode files loaded are:"
         puts CMDController.get_mode_files_loaded
-        @running = true
 
         while (running)
             if CMDController.game_started?
-                puts "#{eval('CMDController.get_player_playing.to_s')} Next Piece?> "
+                if CMDController.human_player_playing?
+                    puts "#{eval('CMDController.get_player_playings_name')} Next Piece?> "
+                    parse_command(get_command())
+                elsif CMDController.ai_player_playing?
+                    t = Thread.new {
+                        CMDController.handle_event(["ai_move"])
+                    }
+                    print "#{CMDController.get_player_playings_name} Thinking"
+                    print "." until t.join(0.25)
+                    STDOUT.flush
+                end
             else
                 puts "Prompt> "
+                parse_command(get_command())
             end
-            # Player
 
-            #Iterate through the number of real players
-            parse_command(get_command())
         end
+        puts "GoodBye!"
+        nil
     end
 
+    Contract None => ArrayOf[String]
     def get_command()
         return gets.chomp.split
     end
 
+    Contract Or[Player, Board, GameMode] => nil
     def update(arg)
         if arg.is_a? Player
             puts "#{arg.to_s} has won!"
-            # self.pretty_print(eval("CMDController.get_board"))
-            self.pretty_print(CMDController.get_board)
             #eval("CMDController.handle_event(['reset'])")
             CMDController.handle_event(['reset'])
             @game_started = false
         elsif arg.is_a? Board
             self.pretty_print(arg)
+        elsif arg.is_a? GameMode
+            puts "#{arg} is not AI compatible.\n" +
+                 "Creating all players as human players."
         else
             puts "#{arg} not recognized."
         end
+        nil
     end
 
+    Contract ArrayOf[String] => nil
     def parse_command(user_input)
         # http://stackoverflow.com/questions/8258517/how-to-check-whether-a-string-contains-a-substring-in-ruby
         if user_input == nil or user_input[0] == nil
             return
         elsif user_input[0].downcase.include? "help"
-            puts " help: \n new: \n restart: \n modes: \n"
+            puts "help: list these help options\n" +
+                 "new: start new game. Ex. new <mode name>\n " +
+                 "restart: restart game \n" +
+                 "modes: list modes\n"
         elsif user_input[0].downcase.include? "mode"
             puts "Mode files loaded are:"
             puts CMDController.get_mode_files_loaded
+        elsif user_input[0].downcase.include? "exit" or
+             user_input[0].downcase.include? "quit"
+            @running = false
         else
             if user_input[0].downcase.include? "new" or
               user_input[0].downcase.include? "create"
@@ -88,8 +108,10 @@ class CommandLineView
             end
             #eval("CMDController.handle_event(#{user_input})")
         end
+        nil
     end
 
+    Contract Board => nil
     def pretty_print(board)
         puts board.board
         board_pic = ""
@@ -101,12 +123,9 @@ class CommandLineView
             board_pic += "\n"
         end
         puts board_pic
+        nil
     end
 
-
-    Contract None => Contracts::None
-    def exit_game()
-    end
 
 end
 

@@ -3,8 +3,11 @@ require_relative "./game"
 class Connect4 < GameMode
 
     def initialize()
+        @ai_compatible = true
+        @num_of_players = 2
         @p1_piece = "B"
         @p2_piece = "R"
+        @pieces = [@p1_piece, @p2_piece]
 
         @board_width = 7
         @board_height = 6
@@ -79,6 +82,10 @@ class Connect4 < GameMode
         pattern[[1, 2]] = @p2_piece
         pattern[[0, 3]] = @p2_piece
         @p2_patterns << pattern
+        @patterns = [
+            @p1_patterns,
+            @p2_patterns
+        ]
 
     end
 end
