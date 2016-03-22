@@ -15,6 +15,10 @@ class App
         window = @builder.get_object("window_main")
         window.signal_connect("destroy") { Gtk.main_quit }
         window.show()
+        
+        dialog = @builder.get_object("dialog1")
+        dialog.signal_connect("destroy") { Gtk.main_quit }
+        dialog.show()
 
         image = Gtk::Image::new
         image.set_from_file("../assets/Tile_Red.png")
@@ -28,7 +32,13 @@ class App
         #grid.attach(image, 7, 7, 1, 1)
         tile = grid.get_child_at(3, 3)
         tile.destroy
-        grid.attach(image, 3, 3, 1, 1)
+
+        combobox = Gtk::ComboBoxText.new
+        combobox.append_text("Asd")
+        combobox.append_text("Aassd")
+        combobox.show()
+        grid.attach(combobox, 3, 3, 1, 1)
+
         
         #image.set_from_file("../assets/Tile_Red.png")
         #grid.attach(image, 8, 7, 1, 1)
