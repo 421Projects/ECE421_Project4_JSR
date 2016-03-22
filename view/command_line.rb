@@ -29,14 +29,22 @@ class CommandLineView
 
         while (running)
             if CMDController.game_started?
-                puts "#{eval('CMDController.get_player_playing.to_s')} Next Piece?> "
+                if CMDController.human_player_playing?
+                    puts "#{eval('CMDController.get_player_playings_name')} Next Piece?> "
+                    parse_command(get_command())
+                elsif CMDController.ai_player_playing?
+                    t = Thread.new {
+                        CMDController.handle_event(["ai_move"])
+                    }
+                    print "#{CMDController.get_player_playings_name} Thinking"
+                    print "." until t.join(0.25)
+                    STDOUT.flush
+                end
             else
                 puts "Prompt> "
+                parse_command(get_command())
             end
-            # Player
 
-            #Iterate through the number of real players
-            parse_command(get_command())
         end
     end
 

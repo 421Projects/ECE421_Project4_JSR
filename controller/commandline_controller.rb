@@ -44,8 +44,16 @@ class CMDController
         @modes_loaded
     end
 
-    def self.get_player_playing
-        return @player_playing
+    def self.get_player_playings_name
+        return @player_playing.to_s
+    end
+
+    def self.human_player_playing?
+        return @player_playing.is_a? RealPlayer
+    end
+
+    def self.ai_player_playing?
+        return @player_playing.is_a? AIPlayer
     end
 
     def self.game_started?
@@ -88,9 +96,9 @@ class CMDController
                 @board.add_observer(obj)
             end
             @player_playing = @players.shuffle[0]
-            if @player_playing.is_a? AIPlayer
-                self.take_turn(0)
-            end
+        # if @player_playing.is_a? AIPlayer
+        #     self.take_turn(0)
+        # end
         else
             raise StandardError, "#{gameClazz} not a Game."
         end
@@ -116,9 +124,9 @@ class CMDController
             if @player_playing == nil
                 @player_playing = @players[0]
             end
-            if @player_playing.is_a? AIPlayer
-                self.take_turn(0)
-            end
+            # if @player_playing.is_a? AIPlayer
+            #     self.take_turn(0)
+            # end
         end
         nil
     end
@@ -158,6 +166,8 @@ class CMDController
                     @board = nil
                     @player_playing = nil
                     @game_started = false
+                elsif commands[0].downcase.include? "ai"
+                    self.take_turn(0)
                 end
             else
                 raise CommandNotSupported, "#{commands} not supported."
