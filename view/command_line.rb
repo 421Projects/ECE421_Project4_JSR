@@ -46,12 +46,15 @@ class CommandLineView
 
         end
         puts "GoodBye!"
+        nil
     end
 
+    Contract None => ArrayOf[String]
     def get_command()
         return gets.chomp.split
     end
 
+    Contract Or[Player, Board] => nil
     def update(arg)
         if arg.is_a? Player
             puts "#{arg.to_s} has won!"
@@ -63,8 +66,10 @@ class CommandLineView
         else
             puts "#{arg} not recognized."
         end
+        nil
     end
 
+    Contract ArrayOf[String] => nil
     def parse_command(user_input)
         # http://stackoverflow.com/questions/8258517/how-to-check-whether-a-string-contains-a-substring-in-ruby
         if user_input == nil or user_input[0] == nil
@@ -100,6 +105,7 @@ class CommandLineView
             end
             #eval("CMDController.handle_event(#{user_input})")
         end
+        nil
     end
 
     Contract Board => nil

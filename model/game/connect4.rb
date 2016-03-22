@@ -3,6 +3,7 @@ require_relative "./game"
 class Connect4 < GameMode
 
     def initialize()
+        @num_of_players = 2
         @p1_piece = "B"
         @p2_piece = "R"
 

@@ -13,6 +13,7 @@ class GameMode
     attr_reader :p2_piece
     attr_reader :p1_patterns
     attr_reader :p2_patterns
+    attr_reader :num_of_players
 
     Contract None => Any
     def initialize()

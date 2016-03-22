@@ -16,9 +16,9 @@ class CMDController
     class ModeNotSupported < Exception
     end
 
-    attr_reader :game_started
+    #attr_reader :game_started
 
-    #Contract None => Any
+    Contract ArrayOf[Object] => Any
     def self.initialize(observer_views)
         original_dir = Dir.pwd
         Dir.chdir(__dir__)
@@ -40,27 +40,32 @@ class CMDController
         @AI_players = 0
     end
 
+    Contract None => ArrayOf[Class]
     def self.get_mode_files_loaded
         @modes_loaded
     end
 
+    Contract None => String
     def self.get_player_playings_name
         return @player_playing.to_s
     end
 
+    Contract None => Bool
     def self.human_player_playing?
         return @player_playing.is_a? RealPlayer
     end
 
+    Contract None => Bool
     def self.ai_player_playing?
         return @player_playing.is_a? AIPlayer
     end
 
+    Contract None => Bool
     def self.game_started?
         @game_started
     end
 
-    #Contract String => GameMode
+    Contract String, Maybe[Integer] => GameMode
     def self.create_game(game, ai_players=0)
         if ai_players.is_a? Numeric
             @AI_players = ai_players
@@ -74,16 +79,18 @@ class CMDController
             patterns = [@game.p1_patterns, @game.p2_patterns]
             names = [@game.p1_piece, @game.p2_piece]
             for i in 0..(@AI_players-1)
-                puts "creating ai"
-                ai = AIPlayer.new(names[i], patterns[i],
-                                  names[i+1] || names[0], patterns[i+1] || patterns[0])
-                for obj in @observer_views
-                    ai.add_observer(obj)
+                if @players.size < @game.num_of_players
+                    puts "creating ai"
+                    ai = AIPlayer.new(names[i], patterns[i],
+                                      names[i+1] || names[0], patterns[i+1] || patterns[0])
+                    for obj in @observer_views
+                        ai.add_observer(obj)
+                    end
+                    @players.push(ai)
                 end
-                @players.push(ai)
             end
 
-            while @players.size < 2 # number of players
+            while @players.size < @game.num_of_players#2 # number of players
                 puts "creating real"
                 re = RealPlayer.new(names.pop, patterns.pop)
                 for obj in @observer_views

@@ -3,6 +3,7 @@ require_relative "./game"
 class OttoToot < GameMode
 
     def initialize()
+        @num_of_players = 2
         @p1_piece = "O"
         @p2_piece = "T"
 
