@@ -4,9 +4,10 @@ require_relative 'player/player'
 class Board
 
     include Observable
-    class ColumnFullError < Exception
+    #http://blog.honeybadger.io/ruby-custom-exceptions/
+    class ColumnFullError < StandardError
     end
-    class OutOfBounds < Exception
+    class OutOfBounds < StandardError
     end
 
     include Contracts::Core

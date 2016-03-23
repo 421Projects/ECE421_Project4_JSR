@@ -12,9 +12,9 @@ class CMDController
     include Contracts::Builtin
     include Contracts::Invariants
 
-    class CommandNotSupported < Exception
+    class CommandNotSupported < StandardError
     end
-    class ModeNotSupported < Exception
+    class ModeNotSupported < StandardError
     end
 
     #attr_reader :game_started
@@ -85,24 +85,20 @@ class CMDController
             #names = [@game.p1_piece, @game.p2_piece]
             patterns = @game.patterns
             names = @game.pieces
-            if @game.ai_compatible?
-                for i in 0..(@AI_players-1)
-                    if @players.size < @game.num_of_players
-                        ai = AIPlayer.new(names[i], patterns[i],
-                                          names[i+1] || names[0], patterns[i+1] || patterns[0])
-                        @player_playing = ai
-                        for obj in @observer_views
-                            ai.add_observer(obj)
-                        end
-                        @players.push(ai)
+            for i in 0..(@AI_players-1)
+                if @players.size < @game.num_of_players and
+                   @players.size <= 2
+                    ai = AIPlayer.new(names[i], patterns[i],
+                                      names[i+1] || names[0], patterns[i+1] || patterns[0])
+                    @player_playing = ai
+                    for obj in @observer_views
+                        ai.add_observer(obj)
                     end
+                    @players.push(ai)
                 end
-            else
-                c.changed
-                c.notify_observers(@game)
             end
 
-            while @players.size < @game.num_of_players#2 # number of players
+            while @players.size < @game.num_of_players #2 # number of players
                 re = RealPlayer.new(names.pop, patterns.pop)
                 for obj in @observer_views
                     re.add_observer(obj)
