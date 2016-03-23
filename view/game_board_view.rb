@@ -60,21 +60,7 @@ class GameBoardView
         }
         
         @button_new_game = @builder.get_object("button_new_game")
-        @button_new_game.signal_connect("clicked") { @dialog.run }
-
-        label = @builder.get_object("label_current_player")
-        label.set_text("asd")
-
-        combobox = Gtk::ComboBoxText.new
-        combobox.append_text("Asd")
-        combobox.append_text("Aassd")
-        combobox.show()
-        @grid_game_board.attach(combobox, 3, 3, 1, 1)
-
-        
-        #image.set_from_file("../assets/Tile_Red.png")
-        #grid.attach(image, 8, 7, 1, 1)
-                
+        @button_new_game.signal_connect("clicked") { @dialog.run }               
         
         Gtk.main()
     end
