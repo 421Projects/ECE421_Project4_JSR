@@ -24,7 +24,14 @@ class GameBoardView
         @window_main.signal_connect("destroy") { Gtk.main_quit }
         @window_main.show
         
+        @image_tile_empty = Gtk::Image::new.set_from_file("../assets/Tile_Empty.png").set_visible(true).set_focus(false)
+        @image_tile_black = Gtk::Image::new.set_from_file("../assets/Tile_Black.png").set_visible(true).set_focus(false)
+        @image_tile_red = Gtk::Image::new.set_from_file("../assets/Tile_Red.png").set_visible(true).set_focus(false)
+        @image_tile_green = Gtk::Image::new.set_from_file("../assets/Tile_Green.png").set_visible(true).set_focus(false)
+        @image_tile_pink = Gtk::Image::new.set_from_file("../assets/Tile_Pink.png").set_visible(true).set_focus(false)
+        
         @grid_game_board = @builder.get_object("grid_game_board")
+        @grid_play_buttons = @builder.get_object("grid_play_buttons")
         
         @dialog = @builder.get_object("dialog_new_game")
         @dialog.set_title("New Game")
@@ -49,34 +56,20 @@ class GameBoardView
                                                          @dialog_combobox_player4.active_text)
             GameController.create_game(GameController.get_game_class_from_title(@dialog_combobox_gamemodes.active_text))
            
-            board = GameController.get_board
-            
+            clear_board
         }
         
         @button_new_game = @builder.get_object("button_new_game")
         @button_new_game.signal_connect("clicked") { @dialog.run }
-        
 
-
-
-        image = Gtk::Image::new
-        image.set_from_file("../assets/Tile_Red.png")
-        image.set_visible(true)
-        image.set_focus(false)
-        
         label = @builder.get_object("label_current_player")
         label.set_text("asd")
-        
-        grid = @builder.get_object("grid_game_board")
-        #grid.attach(image, 7, 7, 1, 1)
-        tile = grid.get_child_at(3, 3)
-        tile.destroy
 
         combobox = Gtk::ComboBoxText.new
         combobox.append_text("Asd")
         combobox.append_text("Aassd")
         combobox.show()
-        grid.attach(combobox, 3, 3, 1, 1)
+        @grid_game_board.attach(combobox, 3, 3, 1, 1)
 
         
         #image.set_from_file("../assets/Tile_Red.png")
@@ -90,10 +83,31 @@ class GameBoardView
     def update(arg)
         if arg.is_a? Player
             puts "#{arg.to_s} has won!"
-            #eval("CMDController.handle_event(['reset'])")
-            CMDController.handle_event(['reset'])
+            clear_board
         elsif arg.is_a? Board
-            self.pretty_print(arg)
+            
+            # Clear the board.
+            15.times do |i|
+                15.times do |j|
+                    tile = @grid_game_board.get_child_at(i, j)
+                    tile.destroy unless tile.nil?
+                end
+            end
+            
+            # Recreate the board.
+            board = GameController.get_board
+            board.width.times do |i|
+                board.height.times do |j|
+                    player = board.get_player_on_pos(j, i)
+                    image = Gtk::Image::new.set_from_file("../assets/Tile_Empty.png").set_visible(true).set_focus(false) if player == "*"
+                    image = Gtk::Image::new.set_from_file("../assets/Tile_Red.png").set_visible(true).set_focus(false) if player == "R"
+                    image = Gtk::Image::new.set_from_file("../assets/Tile_Black.png").set_visible(true).set_focus(false) if player == "B"
+                    image = Gtk::Image::new.set_from_file("../assets/Tile_Green.png").set_visible(true).set_focus(false) if player == "G"
+                    image = Gtk::Image::new.set_from_file("../assets/Tile_Pink.png").set_visible(true).set_focus(false) if player == "P"
+                    @grid_game_board.attach(image, i, board.height-j, 1, 1)
+                end
+            end
+                        
         elsif arg.is_a? Game
             puts "#{arg} is not AI compatible.\n" +
                  "Creating all players as human players."
@@ -102,6 +116,39 @@ class GameBoardView
         end
         nil
     end 
+    
+    def clear_board
+        board = GameController.get_board
+    
+        # Clear the board.
+        15.times do |i|
+            15.times do |j|
+                tile = @grid_game_board.get_child_at(i, j)
+                tile.destroy unless tile.nil?
+            end
+        end
+        
+        # Clear the "Place" buttons.
+        15.times do |i|
+            tile = @grid_play_buttons.get_child_at(i, 0)
+            tile.destroy unless tile.nil?
+        end
+        
+        # Recreate the board.
+        board.width.times do |i|
+            board.height.times do |j|
+                image = Gtk::Image::new.set_from_file("../assets/Tile_Empty.png").set_visible(true).set_focus(false)
+                @grid_game_board.attach(image, i, j, 1, 1)
+            end
+        end
+        
+        # Add the "Place" buttons.
+        board.width.times do |i|
+            button = Gtk::Button::new.set_label("Place").set_visible(true).set_focus(false)
+            button.signal_connect("clicked") {GameController.take_turn(i)}
+            @grid_play_buttons.attach(button, i, 0, 1, 1)
+        end
+    end
 end
 
 app = GameBoardView.new
