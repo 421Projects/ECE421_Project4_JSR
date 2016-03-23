@@ -20,11 +20,6 @@ class Game
     def initialize()
         raise NotImplementedError, "Objects that extend Game must provide their own constructor."
     end
-
-    Contract None => Bool
-    def ai_compatible?
-        return true
-    end
     
     Contract Contracts::Nat,Contracts::Nat => Any
     def set_board_dimensions(board_width, board_height)

@@ -56,9 +56,6 @@ class CommandLineView
             CMDController.handle_event(['reset'])
         elsif arg.is_a? Board
             self.pretty_print(arg)
-        elsif arg.is_a? Game
-            puts "#{arg} is not AI compatible.\n" +
-                 "Creating all players as human players."
         else
             puts "#{arg} not recognized."
         end
@@ -84,21 +81,42 @@ class CommandLineView
         else
             if user_input[0].downcase.include? "new" or
               user_input[0].downcase.include? "create"
-                puts "how many AIs?"
-                count = gets.chomp
+                count = nil
+                while(count.to_i.to_s != count.to_s or
+                      count.to_i < 0 or
+                      count.to_i > 2)
+                    puts "how many AIs? (maximum of 2 supported)"
+                    count = gets.chomp
+                    if count.downcase.include? "quit"
+                        @running = false
+                        return
+                    end
+                    puts count.to_i
+                end
                 user_input << count
             end
             begin
                 CMDController.handle_event(user_input)
-            rescue CMDController::ModeNotSupported => mns
-                puts mns.message
-                return
-            rescue CMDController::CommandNotSupported => cns
-                puts cns.message
-                return
-            rescue NameError => ne
-                puts ne.message
-                return
+            rescue StandardError => se
+                puts se.message
+                puts "Do you want try again? (y/n)"
+                response = gets.chomp.split
+                if response[0].downcase.include? "y"
+                    puts "Trying again..."
+                    return
+                else
+                    puts "Quiting..."
+                    @running = false
+                end
+            # rescue CMDController::ModeNotSupported => mns
+            #     puts mns.message
+            #     return
+            # rescue CMDController::CommandNotSupported => cns
+            #     puts cns.message
+            #     return
+            # rescue NameError => ne
+            #     puts ne.message
+            #     return
             end
             #eval("CMDController.handle_event(#{user_input})")
         end
