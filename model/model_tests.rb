@@ -529,7 +529,7 @@ class Connect4ModelTest < Test::Unit::TestCase
 
     def test_game_constructor
         assert_raise NotImplementedError do
-            thrown = GameMode.new
+            thrown = Game.new
         end
     end
 
