@@ -6,6 +6,8 @@ class Connect4 < Game
         @num_of_players = 2
         @p1_piece = "B"
         @p2_piece = "R"
+        @p1_image = "../../assets/Tile_Black.png"
+        @p2_image = "../../assets/Tile_Red.png"
         @pieces = [@p1_piece, @p2_piece]
 
         @board_width = 7
@@ -86,5 +88,9 @@ class Connect4 < Game
             @p2_patterns
         ]
 
+    end
+    
+    def title
+        "Connect 4"
     end
 end

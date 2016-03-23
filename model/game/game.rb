@@ -32,4 +32,9 @@ class Game
         @board_height = board_height
     end
     
+    Contract None => String
+    def title
+        "Game"
+    end
+    
 end

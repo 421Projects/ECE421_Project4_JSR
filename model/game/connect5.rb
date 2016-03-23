@@ -10,8 +10,12 @@ class Connect5_4P < Game
         @num_of_players = 4
         @p1_piece = "B"
         @p2_piece = "R"
-        @p3_piece = "Y"
-        @p4_piece = "Z"
+        @p3_piece = "G"
+        @p4_piece = "P"
+        @p1_image = "../../assets/Tile_Black.png"
+        @p2_image = "../../assets/Tile_Red.png"
+        @p3_image = "../../assets/Tile_Green.png"
+        @p4_image = "../../assets/Tile_Pink.png"
         @pieces = [@p1_piece, @p2_piece, @p3_piece, @p4_piece]
         @board_width = 10
         @board_height = 10
@@ -63,5 +67,9 @@ class Connect5_4P < Game
             pattern_const[[0, 4]] = piece
             pattern << pattern_const
         end
+    end
+    
+    def title
+        "Connect 5"
     end
 end

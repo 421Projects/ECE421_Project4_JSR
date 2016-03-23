@@ -6,6 +6,8 @@ class OttoToot < Game
         @num_of_players = 2
         @p1_piece = "O"
         @p2_piece = "T"
+        @p1_image = "../../assets/Tile_O.png"
+        @p2_image = "../../assets/Tile_T.png"
         @pieces = [@p1_piece, @p2_piece]
 
         @board_width = 7
@@ -88,4 +90,7 @@ class OttoToot < Game
 
     end
     
+    def title
+        "OTTO-TOOT"
+    end
 end
