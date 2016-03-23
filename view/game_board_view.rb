@@ -54,7 +54,14 @@ class GameBoardView
                                                          @dialog_combobox_player2.active_text,
                                                          @dialog_combobox_player3.active_text,
                                                          @dialog_combobox_player4.active_text)
-            GameController.create_game(GameController.get_game_class_from_title(@dialog_combobox_gamemodes.active_text))
+
+            if (@dialog_combobox_player1.active_text == "AI" && @dialog_combobox_player2.active_text == "AI")
+                GameController.create_game(GameController.get_game_class_from_title(@dialog_combobox_gamemodes.active_text), 2)
+            elsif (@dialog_combobox_player1.active_text == "AI" || @dialog_combobox_player2.active_text == "AI")
+                GameController.create_game(GameController.get_game_class_from_title(@dialog_combobox_gamemodes.active_text), 1)
+            else
+                GameController.create_game(GameController.get_game_class_from_title(@dialog_combobox_gamemodes.active_text))
+            end            
            
             clear_board
         }
