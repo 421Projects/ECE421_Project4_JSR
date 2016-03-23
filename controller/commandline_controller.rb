@@ -17,8 +17,6 @@ class CMDController
     class ModeNotSupported < StandardError
     end
 
-    #attr_reader :game_started
-
     Contract ArrayOf[Object] => Any
     def self.initialize(observer_views)
         original_dir = Dir.pwd
@@ -105,6 +103,7 @@ class CMDController
                 end
                 @players.push(re)
             end
+
             @board = Board.new(@game.board_width, @game.board_height)
             for obj in @observer_views
                 @board.add_observer(obj)
@@ -113,16 +112,13 @@ class CMDController
             if @player_playing == nil
                 @player_playing = @players.shuffle[0]
             end
-        # if @player_playing.is_a? AIPlayer
-        #     self.take_turn(0)
-        # end
         else
             raise StandardError, "#{gameClazz} not a Game."
         end
         return @game
     end
 
-    #Contract Maybe[Nat] => nil
+    Contract Maybe[Nat] => nil
     def self.take_turn(arg)
         if arg == nil
             return arg
@@ -148,14 +144,18 @@ class CMDController
         nil
     end
 
+    Contract None => Board
     def self.get_board()
         return @board
     end
 
+    Contract Nat => nil
     def self.set_AIs(count)
         @AI_players = count
+        nil
     end
 
+    Contract ArrayOf[String] => nil
     def self.handle_event(commands)
         case commands
         when Array
@@ -192,16 +192,7 @@ class CMDController
         else
             raise CommandNotSupported, "#{commands} not supported."
         end
-    end
-
-    #Contract Contracts::Nat => Player
-    def get_player(playerId)
-        return nil
-    end
-
-    #Contract Contracts::Nat => Board
-    def get_board()
-        return @board
+        nil
     end
 
 end
