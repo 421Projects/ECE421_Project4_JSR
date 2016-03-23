@@ -16,6 +16,8 @@ class CMDController
     end
     class ModeNotSupported < StandardError
     end
+    class AICountError < StandardError
+    end
 
     Contract ArrayOf[Object] => Any
     def self.initialize(observer_views)
@@ -70,12 +72,18 @@ class CMDController
         for obj in @observer_views
             c.add_observer(obj)
         end
-        if ai_players.is_a? Numeric
+        if ai_players.to_i.to_s == ai_players.to_s and
+          ai_players.to_i >= 0 and
+          ai_players.to_i <= 2
             @AI_players = ai_players
         else
-            @AI_players = 0
+            raise AICountError, "Only two AIs supported."
         end
-        gameClazz = Object.const_get(game) # Game
+        begin
+            gameClazz = Object.const_get(game) # Game
+        rescue StandardError
+            raise ModeNotSupported
+        end
         if gameClazz.superclass == Game
             @game = gameClazz.new()
             @game_started = true
@@ -185,6 +193,8 @@ class CMDController
                     @game_started = false
                 elsif commands[0].downcase.include? "ai"
                     self.take_turn(0)
+                else
+                    raise CommandNotSupported, "#{commands} not supported."
                 end
             else
                 raise CommandNotSupported, "#{commands} not supported."
