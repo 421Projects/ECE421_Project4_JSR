@@ -81,19 +81,8 @@ class CommandLineView
         else
             if user_input[0].downcase.include? "new" or
               user_input[0].downcase.include? "create"
-                count = nil
-                while(count.to_i.to_s != count.to_s or
-                      count.to_i < 0 or
-                      count.to_i > 2)
-                    puts "how many AIs? (maximum of 2 supported)"
-                    count = gets.chomp
-                    if count.downcase.include? "quit"
-                        @running = false
-                        return
-                    end
-                    puts count.to_i
-                end
-                user_input << count
+                puts "how many AIs? (maximum of 2 supported)"
+                user_input << gets.chomp
             end
             begin
                 CMDController.handle_event(user_input)
@@ -108,17 +97,7 @@ class CommandLineView
                     puts "Quiting..."
                     @running = false
                 end
-            # rescue CMDController::ModeNotSupported => mns
-            #     puts mns.message
-            #     return
-            # rescue CMDController::CommandNotSupported => cns
-            #     puts cns.message
-            #     return
-            # rescue NameError => ne
-            #     puts ne.message
-            #     return
             end
-            #eval("CMDController.handle_event(#{user_input})")
         end
         nil
     end
@@ -140,6 +119,8 @@ class CommandLineView
 
 
 end
-
-c = CommandLineView.new
-c.start_game()
+# http://stackoverflow.com/questions/2249310/if-name-main-equivalent-in-ruby
+if __FILE__ == $0
+    c = CommandLineView.new
+    c.start_game()
+end

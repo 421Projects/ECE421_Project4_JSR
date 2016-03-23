@@ -1,9 +1,10 @@
 require "test/unit"
 require_relative "game_controller"
+require_relative "commandline_controller"
+require_relative "../view/command_line"
 require_relative "../model/board"
 require_relative "../model/game/connect4"
 require_relative "../model/game/otto_toot"
-require_relative "../model/game_pieces/black.rb"
 
 class ControllerTest < Test::Unit::TestCase
 
@@ -47,6 +48,36 @@ class ControllerTest < Test::Unit::TestCase
         game_controller.create_ai_players(1)
 
         assert_equal(1, game_controller.get_number_of_players)
+    end
+
+    def test_commandline
+        CMDController.initialize([CommandLineView.new])
+        create_game_commandline
+        handle_event_commandline
+    end
+
+    def create_game_commandline
+        assert_raise CMDController::ModeNotSupported do
+            CMDController.create_game("ModeNotCreated", 1)
+        end
+        assert_raise CMDController::AICountError do
+            CMDController.create_game("Connect4", 3)
+        end
+        assert_raise CMDController::AICountError do
+            CMDController.create_game("Connect4", -1)
+        end
+    end
+
+    def handle_event_commandline
+        assert_raise CMDController::CommandNotSupported do
+            CMDController.handle_event(["randomCommand"])
+        end
+        assert_raise do
+            CMDController.handle_event("randomCommand")
+        end
+        assert_raise do
+            CMDController.handle_event(1)
+        end
     end
 
 end
